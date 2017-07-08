@@ -6,7 +6,7 @@ import { Repository, RepositoryCreator } from "./repository";
 
 declare module "./repository-ref" {
   interface RepositoryRef {
-    load(): Promise<Repository>;
+    load(): Promise<Repository | null>;
 
     loadIssues(
       milestone?: number | "*" | "none"): Promise<Issue[]>;
@@ -29,11 +29,11 @@ declare module "./repository-ref" {
   }
 }
 
-RepositoryRef.prototype.load = async function (this: RepositoryRef): Promise<Repository> {
+RepositoryRef.prototype.load = async function (this: RepositoryRef): Promise<Repository | null> {
   if (this instanceof Repository)
     return <Repository>this;
   const response = await this.getAsync(`/repos/${this.owner.login}/${this.name}`);
-  return RepositoryCreator.create(response.body, this);
+  return RepositoryCreator.create(response, this);
 }
 
 RepositoryRef.prototype.loadIssues = async function (
@@ -64,5 +64,5 @@ RepositoryRef.prototype.loadIssues = async function (
   if (updatedSince)
     uri += `&since=${updatedSince.toISOString()}`;
   const response = await this.getAsync(uri);
-  return response.body.map((issue: apiTypes.Issue) => IssueCreator.create(issue, this));
+  return response.map((issue: apiTypes.Issue) => IssueCreator.create(issue, this));
 }

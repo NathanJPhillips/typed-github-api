@@ -34,7 +34,7 @@ export class GitHubApi extends GitHubRef {
     if (ascending === undefined)
       ascending = sort === "full_name";
     const response = await this.getAsync(`/user/repos?visibility=${visibility}&affiliation=${affiliation.join(",")}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
-    return response.body.map(this.getRepository);
+    return response.map(this.getRepository);
   }
 
   public async loadIssues(
@@ -50,7 +50,7 @@ export class GitHubApi extends GitHubRef {
     if (updatedSince)
       uri += `&since=${updatedSince.toISOString()}`;
     const response = await this.getAsync(uri);
-    return response.body.map(this.getIssue);
+    return response.map(this.getIssue);
   }
 
   private async search<TData, TApiData>(

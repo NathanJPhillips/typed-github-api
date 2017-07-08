@@ -5,7 +5,7 @@ import { User, UserCreator } from "./user";
 
 declare module "./user-ref" {
   interface UserRef {
-    load(): Promise<User>;
+    load(): Promise<User | null>;
 
     loadRepositories(
       type: "all" | "owner" | "member",
@@ -14,11 +14,11 @@ declare module "./user-ref" {
   }
 }
 
-UserRef.prototype.load = async function (this: UserRef): Promise<User> {
+UserRef.prototype.load = async function (this: UserRef): Promise<User | null> {
   if (this instanceof User)
     return <User>this;
   const response = await this.getAsync(`/users/${this.login}`);
-  return UserCreator.create(response.body, this);
+  return UserCreator.create(response, this);
 }
 
 UserRef.prototype.loadRepositories = async function (
@@ -30,5 +30,5 @@ UserRef.prototype.loadRepositories = async function (
   if (ascending === undefined)
     ascending = sort === "full_name";
   const response = await this.getAsync(`/users/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
-  return response.body.map((repository: apiTypes.Repository) => RepositoryCreator.create(repository, this));
+  return response.map((repository: apiTypes.Repository) => RepositoryCreator.create(repository, this));
 }

@@ -9,7 +9,7 @@ export interface Options {
   oAuthToken?: string;
 }
 
-const nextLinkRegExp = /<([^>]+)>; rel="next"/g;
+const nextLinkRegExp = /<([^>]+)>; rel="next"/;
 
 export function getAsync(relativeUri: string, options: Options): Promise<any> {
   return getAbsoluteAsync(getUri(relativeUri), options);
@@ -26,6 +26,14 @@ export async function getAbsoluteAsync(uri: string, options: Options): Promise<a
     return getAbsoluteAsync(uri, options);
   }
   // Check response code
+  if (response.status == HttpStatusCodes.NotFound)
+    return null;
+  if (response.status == HttpStatusCodes.Unauthorized) {
+    if (options.oAuthToken)
+      throw new Error("Your token does not have permissions to view the requested resource");
+    else
+      throw new Error("You need to provide login credentials to view the requested resource");
+  }
   if (Math.floor(response.status / 100) !== Math.floor(HttpStatusCodes.OK / 100))
     throw new Error("Unexpected status code from GitHub: " + response.statusText);
   // Create result

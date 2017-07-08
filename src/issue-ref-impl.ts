@@ -4,11 +4,11 @@ import { IssueCreator } from "./pull-request";
 
 declare module "./issue-ref" {
   interface IssueRef {
-    load(): Promise<Issue>;
+    load(): Promise<Issue | null>;
   }
 }
 
-IssueRef.prototype.load = async function (this: IssueRef): Promise<Issue> {
+IssueRef.prototype.load = async function (this: IssueRef): Promise<Issue | null> {
   const response = await this.getAsync(`/repos/${this.repository.owner.login}/${this.repository.name}/issues/${this.number}`);
-  return IssueCreator.create(response.body, this);
+  return IssueCreator.create(response, this);
 }

@@ -52,7 +52,8 @@ export class Issue extends GitHubRef {
     this.milestone = MilestoneCreator.create(data.milestone, this);
     this.created = data.created_at; // TODO: May need new Date(...)
     this.closed = data.closed_at || undefined;
-    this.closedBy = data.closed_by === null ? undefined : UserCreator.createSummary(data.closed_by, this);
+    if (data.closed_by)
+      this.closedBy = UserCreator.createSummary(data.closed_by, this);
     this.updated = data.updated_at;
   }
 }
