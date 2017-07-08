@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= repo.fullName
+  img(src=repo.owner.avatarUri class="avatar")
+  dl
+    dt Owner
+    dd 
+      a(href=`/users/${repo.owner.login}`)= repo.owner.login
+    dt Description
+    dd= repo.description
+    dt Issues
+    dd Click #[a(href=`/repos/${repo.owner.login}/${repo.name}/issues`) here] for full list.

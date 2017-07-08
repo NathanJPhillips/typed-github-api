@@ -1,0 +1,26 @@
+﻿body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.avatar {
+    float: right;
+    height: 25px;
+}
+
+.description {
+    font-size: 11px;
+}
+
+ul.item-list {
+    width: 300px;
+}
+
+    ul.item-list li {
+        border: solid;
+        min-height: 30px;
+    }

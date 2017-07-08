@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+  p These are your repositories:
+  ul(class="item-list")
+    each repo in repos
+      li
+        img(src=repo.owner.avatarUri class="avatar")
+        span
+            a(href=`/users/${repo.owner.login}`)= repo.owner.login
+            | /
+            a(href=`/repos/${repo.owner.login}/${repo.name}`)= repo.name
+        div(class="description")= repo.description
