@@ -1,0 +1,19 @@
+﻿# User files
+.suo
+*.user
+.vs/
+
+# Project/Solution files
+*.sln
+*.njsproj
+
+# Node
+node_modules
+npm-debug.log
+
+# Compile output
+obj/
+bin/
+dist/
+*.js.map
+*.js

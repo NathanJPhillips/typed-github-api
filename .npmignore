@@ -1,0 +1,23 @@
+﻿# User files
+.suo
+*.user
+.vs/
+
+# Project/Solution files
+*.sln
+*.njsproj
+
+# Compile output
+obj/
+bin/
+
+# Config files
+tsconfig.json
+tslint.json
+
+# Don't publish the Typescript files
+src/
+
+# Don't publish the tests
+tests/
+dist/tests/
