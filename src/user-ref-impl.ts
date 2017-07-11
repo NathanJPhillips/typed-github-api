@@ -7,6 +7,13 @@ declare module "./user-ref" {
   interface UserRef {
     load(): Promise<User | null>;
 
+    /**
+     * @description Loads repositories accessible to this user.
+     * @param type The type of search (default owner)
+     * @param sort The field to sort by (default full_name)
+     * @param ascending Whether to sort ascending rather than descending (default false unless sorting by full_name)
+     * @return The resulting array of repositories
+     */
     loadRepositories(
       type?: "all" | "owner" | "member",
       sort?: "created" | "updated" | "pushed" | "full_name",

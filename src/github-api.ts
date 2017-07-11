@@ -56,31 +56,47 @@ export class GitHubApi extends GitHubRef {
   private async search<TData, TApiData>(
     uri: string,
     query: string,
-    sort: string | undefined,
+    sort: string,
     ascending: boolean,
     perPage: number,
     mapping: (item: TApiData & apiTypes.SearchResult) => TData): Promise<TData[]>
   {
     uri += `?q=${encodeURIComponent(query)}`;
-    if (sort && sort !== "best match")
+    if (sort !== "best match")
       uri += `&sort=${sort}&order=${ascending ? "asc" : "desc"}`;
     uri += `&per_page=${perPage}`;
     const result: apiTypes.SearchResults = await this.getAsync(uri);
     return result.items.map(mapping);
   }
 
+  /**
+   * @description Loads repositories matching search query.
+   * @param query The query used for the search
+   * @param sort The field to sort by (default best match)
+   * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
+   * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
+   * @return An array of repositories that match the query
+   */
   public searchRepositories(
     query: string,
-    sort?: "stars" | "forks" | "updated" | "best match",
+    sort: "stars" | "forks" | "updated" | "best match" = "best match",
     ascending: boolean = false,
     perPage: number = 100): Promise<Repository[]>
   {
     return this.search("/search/repositories", query, sort, ascending, perPage, this.getRepository);
   }
 
+  /**
+   * @description Loads repositories matching search query with a score as to how well they matched.
+   * @param query The query used for the search
+   * @param sort The field to sort by (default best match)
+   * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
+   * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
+   * @return An array of repositories that match the query with a score as to how well they matched
+   */
   public searchRepositoriesWithScore(
     query: string,
-    sort?: "stars" | "forks" | "updated" | "best match",
+    sort: "stars" | "forks" | "updated" | "best match" = "best match",
     ascending: boolean = false,
     perPage: number = 100): Promise<SearchResult<Repository>[]>
   {
@@ -91,18 +107,34 @@ export class GitHubApi extends GitHubRef {
     return this.search("/search/repositories", query, sort, ascending, perPage, mapping);
   }
 
+  /**
+   * @description Loads issues matching search query.
+   * @param query The query used for the search
+   * @param sort The field to sort by (default best match)
+   * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
+   * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
+   * @return An array of issues that match the query
+   */
   public async searchIssues(
     query: string,
-    sort?: "comments" | "created" | "updated" | "best match",
+    sort: "comments" | "created" | "updated" | "best match" = "best match",
     ascending: boolean = false,
     perPage: number = 100): Promise<Issue[]>
   {
     return this.search("/search/issues", query, sort, ascending, perPage, this.getIssue);
   }
 
+  /**
+   * @description Loads issues matching search query with a score as to how well they matched.
+   * @param query The query used for the search
+   * @param sort The field to sort by (default best match)
+   * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
+   * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
+   * @return An array of issues that match the query with a score as to how well they matched
+   */
   public async searchIssuesWithScore(
     query: string,
-    sort?: "comments" | "created" | "updated" | "best match",
+    sort: "comments" | "created" | "updated" | "best match" = "best match",
     ascending: boolean = false,
     perPage: number = 100): Promise<SearchResult<Issue>[]>
   {

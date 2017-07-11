@@ -7,6 +7,13 @@ declare module "./organization-ref" {
   interface OrganizationRef {
     load(): Promise<Organization | null>;
 
+    /**
+     * @description Loads repositories owned by this organisation.
+     * @param type The type of repository to return (default all)
+     * @param sort The field to sort by (default full_name)
+     * @param ascending Whether to sort ascending rather than descending (default false unless sorting by full_name)
+     * @return The resulting array of repositories
+     */
     loadRepositories(
       type?: "all" | "public" | "private" | "forks" | "sources" | "member",
       sort?: "created" | "updated" | "pushed" | "full_name",

@@ -1,4 +1,4 @@
-import { GitHubApi } from "./api";
+import { GitHubApi } from "./github-api";
 
 export { Options } from "./api-fetch";
 export { Issue } from "./issue";

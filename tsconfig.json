@@ -7,7 +7,7 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "removeComments": true,
+    "removeComments": false,
     "noEmitOnError": true,
     "noImplicitAny": true,
     "strictNullChecks": true,

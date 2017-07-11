@@ -8,6 +8,19 @@ declare module "./repository-ref" {
   interface RepositoryRef {
     load(): Promise<Repository | null>;
 
+    /**
+     * @description Loads issues for this repository.
+     * @param milestone Only loads issues for this milestone, if specified; specify * to say the issue must be in a milestone and none to say it must not; if a number is passed, it should refer to a milestone by its number field
+     * @param state Only loads issues for this state (default open)
+     * @param assignee Only loads issues where this user is assigned, if specified; pass in none for issues with no assigned user, and * for issues assigned to any user
+     * @param creator Only loads issues created by this user, if specified
+     * @param mentioned Only loads issues where this user is mentioned, if specified
+     * @param labels Only loads issues tagged with one of these labels, if specified
+     * @param sort The field to sort by (default created)
+     * @param ascending Whether to sort ascending rather than descending (default false)
+     * @param updatedSince Only issues updated at or after this time are returned
+     * @return The resulting array of issues
+     */
     loadIssues(
       milestone?: number | "*" | "none",
       state?: "open" | "closed" | "all",
