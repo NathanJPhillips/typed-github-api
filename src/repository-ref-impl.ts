@@ -9,22 +9,14 @@ declare module "./repository-ref" {
     load(): Promise<Repository | null>;
 
     loadIssues(
-      milestone?: number | "*" | "none"): Promise<Issue[]>;
-    loadIssues(
-      milestone: number | "*" | "none",
-      state: "open" | "closed" | "all",
+      milestone?: number | "*" | "none",
+      state?: "open" | "closed" | "all",
       assignee?: string | "*" | "none",
       creator?: string,
-      mentioned?: string): Promise<Issue[]>;
-    loadIssues(
-      milestone: number | "*" | "none",
-      state: "open" | "closed" | "all",
-      assignee: string | "*" | "none",
-      creator: string,
-      mentioned: string,
-      labels: string[],
-      sort: "created" | "updated" | "comments",
-      ascending: boolean,
+      mentioned?: string,
+      labels?: string[],
+      sort?: "created" | "updated" | "comments",
+      ascending?: boolean,
       updatedSince?: Date): Promise<Issue[]>;
   }
 }
@@ -36,7 +28,17 @@ RepositoryRef.prototype.load = async function (this: RepositoryRef): Promise<Rep
   return RepositoryCreator.create(response, this);
 }
 
-RepositoryRef.prototype.loadIssues = async function (
+function loadIssues(
+  milestone?: number | "*" | "none",
+  state?: "open" | "closed" | "all",
+  assignee?: string | "*" | "none",
+  creator?: string,
+  mentioned?: string,
+  labels?: string[],
+  sort?: "created" | "updated" | "comments",
+  ascending?: boolean,
+  updatedSince?: Date): Promise<Issue[]>;
+async function loadIssues(
   this: RepositoryRef,
   milestone?: number | "*" | "none",
   state: "open" | "closed" | "all" = "open",
@@ -66,3 +68,4 @@ RepositoryRef.prototype.loadIssues = async function (
   const response = await this.getAsync(uri);
   return response.map((issue: apiTypes.Issue) => IssueCreator.create(issue, this));
 }
+RepositoryRef.prototype.loadIssues = loadIssues;

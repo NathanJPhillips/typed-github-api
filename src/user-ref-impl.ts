@@ -8,8 +8,8 @@ declare module "./user-ref" {
     load(): Promise<User | null>;
 
     loadRepositories(
-      type: "all" | "owner" | "member",
-      sort: "created" | "updated" | "pushed" | "full_name",
+      type?: "all" | "owner" | "member",
+      sort?: "created" | "updated" | "pushed" | "full_name",
       ascending?: boolean): Promise<Repository[]>;
   }
 }
@@ -21,7 +21,11 @@ UserRef.prototype.load = async function (this: UserRef): Promise<User | null> {
   return UserCreator.create(response, this);
 }
 
-UserRef.prototype.loadRepositories = async function (
+function loadRepositories(
+  type?: "all" | "owner" | "member",
+  sort?: "created" | "updated" | "pushed" | "full_name",
+  ascending?: boolean): Promise<Repository[]>;
+async function loadRepositories(
   this: UserRef,
   type: "all" | "owner" | "member" = "owner",
   sort: "created" | "updated" | "pushed" | "full_name" = "full_name",
@@ -32,3 +36,4 @@ UserRef.prototype.loadRepositories = async function (
   const response = await this.getAsync(`/users/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
   return response.map((repository: apiTypes.Repository) => RepositoryCreator.create(repository, this));
 }
+UserRef.prototype.loadRepositories = loadRepositories;

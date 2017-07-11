@@ -8,8 +8,8 @@ declare module "./organization-ref" {
     load(): Promise<Organization | null>;
 
     loadRepositories(
-      type: "all" | "public" | "private" | "forks" | "sources" | "member",
-      sort: "created" | "updated" | "pushed" | "full_name",
+      type?: "all" | "public" | "private" | "forks" | "sources" | "member",
+      sort?: "created" | "updated" | "pushed" | "full_name",
       ascending?: boolean): Promise<Repository[]>;
   }
 }
@@ -21,7 +21,11 @@ OrganizationRef.prototype.load = async function (this: OrganizationRef): Promise
   return OrganizationCreator.create(response, this);
 }
 
-OrganizationRef.prototype.loadRepositories = async function (
+function loadRepositories(
+  type?: "all" | "public" | "private" | "forks" | "sources" | "member",
+  sort?: "created" | "updated" | "pushed" | "full_name",
+  ascending?: boolean): Promise<Repository[]>;
+async function loadRepositories(
   this: OrganizationRef,
   type: "all" | "public" | "private" | "forks" | "sources" | "member" = "all",
   sort: "created" | "updated" | "pushed" | "full_name" = "full_name",
@@ -32,3 +36,4 @@ OrganizationRef.prototype.loadRepositories = async function (
   const response = await this.getAsync(`/orgs/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
   return response.map((repository: apiTypes.Repository) => RepositoryCreator.create(repository, this));
 }
+OrganizationRef.prototype.loadRepositories = loadRepositories;

@@ -11,7 +11,7 @@ export class Issue extends GitHubRef {
   public number: number;
 
   public id: number;
-  public state: "open";
+  public state: "open" | "closed";
   public title: string;
   public body: string;
   public comments: number;

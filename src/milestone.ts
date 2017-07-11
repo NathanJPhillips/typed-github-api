@@ -10,7 +10,7 @@ export class Milestone {
   public creator: UserSummary;
   public openIssueCount: number;
   public closedIssueCount: number;
-  public state: "open";
+  public state: "open" | "closed";
   public created: Date;
   public updated: Date;
   public due: Date;

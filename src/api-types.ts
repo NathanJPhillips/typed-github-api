@@ -140,7 +140,7 @@ export interface Milestone {
   creator: UserSummary;
   open_issues: number;
   closed_issues: number;
-  state: "open";
+  state: "open" | "closed";
   created_at: Date;
   updated_at: Date;
   due_on: Date;
@@ -159,7 +159,7 @@ export interface Issue {
   title: string;
   user: UserSummary;
   labels: Label[];
-  state: "open";
+  state: "open" | "closed";
   locked: boolean;
   assignee: UserSummary;
   assignees: User[];
