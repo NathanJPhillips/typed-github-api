@@ -17,7 +17,9 @@ tslint.json
 
 # Don't publish the Typescript files
 src/
+*.js.map
 
 # Don't publish the tests
 tests/
 dist/tests/
+github-api-tests/
