@@ -17,10 +17,10 @@ export class Issue extends GitHubRef {
   public comments: number;
 
   public user: UserSummary;   // Is this createdBy?
-  public assignee: UserSummary;
+  public assignee?: UserSummary;
   public assignees: UserSummary[];
   public labels: Label[];
-  public milestone: Milestone;
+  public milestone?: Milestone;
 
   public created: Date;
   public closed?: Date;
@@ -46,10 +46,12 @@ export class Issue extends GitHubRef {
     this.body = data.body;
     this.comments = data.comments;
     this.user = UserCreator.createSummary(data.user, this);
-    this.assignee = UserCreator.createSummary(data.assignee, this);
-    this.assignees = data.assignees.map((assignee: apiTypes.UserSummary) => UserCreator.createSummary(assignee, this));
-    this.labels = data.labels.map((label: apiTypes.Label) => LabelCreator.create(label, this));
-    this.milestone = MilestoneCreator.create(data.milestone, this);
+    if (data.assignee)
+      this.assignee = UserCreator.createSummary(data.assignee, this);
+    this.assignees = data.assignees.map((assignee) => UserCreator.createSummary(assignee, this));
+    this.labels = data.labels.map((label) => LabelCreator.create(label, this));
+    if (data.milestone)
+      this.milestone = MilestoneCreator.create(data.milestone, this);
     this.created = data.created_at; // TODO: May need new Date(...)
     this.closed = data.closed_at || undefined;
     if (data.closed_by)

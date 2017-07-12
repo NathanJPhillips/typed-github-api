@@ -25,19 +25,21 @@ export class GitHubApi extends GitHubRef {
     return OrganizationRefCreator.create(login, this);
   }
 
-  public async loadMyRepositories(
+  public async loadMyRepositoriesAsync(
     visibility: "all" | "public" | "private",
-    affiliation: ("owner" | "collaborator" | "organization_member")[] = ["owner", "collaborator", "organization_member"],
+    affiliation: Array<"owner" | "collaborator" | "organization_member"> = ["owner", "collaborator", "organization_member"],
     sort: "created" | "updated" | "pushed" | "full_name" = "full_name",
     ascending?: boolean): Promise<Repository[]>
   {
     if (ascending === undefined)
       ascending = sort === "full_name";
-    const response = await this.getAsync(`/user/repos?visibility=${visibility}&affiliation=${affiliation.join(",")}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
+    const response = await this.getAllPagesAsync(`/user/repos?visibility=${visibility}&affiliation=${affiliation.join(",")}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
+    if (response === null)
+      throw new Error("Couldn't retrieve the current user's repositories");
     return response.map(this.getRepository);
   }
 
-  public async loadIssues(
+  public async loadIssuesAsync(
     filter: "assigned" | "created" | "mentioned" | "subscribed" | "all" = "assigned",
     state: "open" | "closed" | "all" = "open",
     labels: string[] = [],
@@ -45,15 +47,26 @@ export class GitHubApi extends GitHubRef {
     ascending: boolean = false,
     updatedSince?: Date): Promise<Issue[]>
   {
-    await this.getAsync("/issues");
     let uri = `/issues?filter=${filter}&state=${state}&labels=${labels.join(",")}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`;
     if (updatedSince)
       uri += `&since=${updatedSince.toISOString()}`;
-    const response = await this.getAsync(uri);
+    const response = await this.getAllPagesAsync(uri);
+    if (response === null)
+      throw new Error("Couldn't retrieve the current user's issues");
     return response.map(this.getIssue);
   }
 
-  private async search<TData, TApiData>(
+  private async getAllSearchPagesAsync<TApiData>(uri: string): Promise<Array<TApiData & apiTypes.SearchResult>> {
+    const response = await this.getAsync<apiTypes.SearchResults<TApiData>>(uri);
+    if (response === null)
+      throw new Error("Couldn't retrieve first search results page");
+    if (!response.nextLink)
+      return response.data.items;
+    const remainingResponse = await this.getAllSearchPagesAsync<TApiData>(response.nextLink);
+    return response.data.items.concat(remainingResponse);
+  }
+
+  private async searchAsync<TData, TApiData>(
     uri: string,
     query: string,
     sort: string,
@@ -65,8 +78,8 @@ export class GitHubApi extends GitHubRef {
     if (sort !== "best match")
       uri += `&sort=${sort}&order=${ascending ? "asc" : "desc"}`;
     uri += `&per_page=${perPage}`;
-    const result: apiTypes.SearchResults = await this.getAsync(uri);
-    return result.items.map(mapping);
+    const result = await this.getAllSearchPagesAsync(uri);
+    return result.map(mapping);
   }
 
   /**
@@ -77,13 +90,13 @@ export class GitHubApi extends GitHubRef {
    * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
    * @return An array of repositories that match the query
    */
-  public searchRepositories(
+  public searchRepositoriesAsync(
     query: string,
     sort: "stars" | "forks" | "updated" | "best match" = "best match",
     ascending: boolean = false,
     perPage: number = 100): Promise<Repository[]>
   {
-    return this.search("/search/repositories", query, sort, ascending, perPage, this.getRepository);
+    return this.searchAsync("/search/repositories", query, sort, ascending, perPage, this.getRepository);
   }
 
   /**
@@ -94,7 +107,7 @@ export class GitHubApi extends GitHubRef {
    * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
    * @return An array of repositories that match the query with a score as to how well they matched
    */
-  public searchRepositoriesWithScore(
+  public searchRepositoriesWithScoreAsync(
     query: string,
     sort: "stars" | "forks" | "updated" | "best match" = "best match",
     ascending: boolean = false,
@@ -104,7 +117,7 @@ export class GitHubApi extends GitHubRef {
       result: this.getRepository(repo),
       score: repo.score,
     });
-    return this.search("/search/repositories", query, sort, ascending, perPage, mapping);
+    return this.searchAsync("/search/repositories", query, sort, ascending, perPage, mapping);
   }
 
   /**
@@ -115,13 +128,13 @@ export class GitHubApi extends GitHubRef {
    * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
    * @return An array of issues that match the query
    */
-  public async searchIssues(
+  public async searchIssuesAsync(
     query: string,
     sort: "comments" | "created" | "updated" | "best match" = "best match",
     ascending: boolean = false,
     perPage: number = 100): Promise<Issue[]>
   {
-    return this.search("/search/issues", query, sort, ascending, perPage, this.getIssue);
+    return this.searchAsync("/search/issues", query, sort, ascending, perPage, this.getIssue);
   }
 
   /**
@@ -132,7 +145,7 @@ export class GitHubApi extends GitHubRef {
    * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
    * @return An array of issues that match the query with a score as to how well they matched
    */
-  public async searchIssuesWithScore(
+  public async searchIssuesWithScoreAsync(
     query: string,
     sort: "comments" | "created" | "updated" | "best match" = "best match",
     ascending: boolean = false,
@@ -142,7 +155,7 @@ export class GitHubApi extends GitHubRef {
       result: this.getIssue(issue),
       score: issue.score,
     });
-    return this.search("/search/issues", query, sort, ascending, perPage, mapping);
+    return this.searchAsync("/search/issues", query, sort, ascending, perPage, mapping);
   }
 
   private getRepository(repository: apiTypes.Repository) { return RepositoryCreator.create(repository, this); }

@@ -5,7 +5,7 @@ import { Organization, OrganizationCreator } from "./organization";
 
 declare module "./organization-ref" {
   interface OrganizationRef {
-    load(): Promise<Organization | null>;
+    loadAsync(): Promise<Organization | null>;
 
     /**
      * @description Loads repositories owned by this organisation.
@@ -14,25 +14,27 @@ declare module "./organization-ref" {
      * @param ascending Whether to sort ascending rather than descending (default false unless sorting by full_name)
      * @return The resulting array of repositories
      */
-    loadRepositories(
+    loadRepositoriesAsync(
       type?: "all" | "public" | "private" | "forks" | "sources" | "member",
       sort?: "created" | "updated" | "pushed" | "full_name",
       ascending?: boolean): Promise<Repository[]>;
   }
 }
 
-OrganizationRef.prototype.load = async function (this: OrganizationRef): Promise<Organization | null> {
+OrganizationRef.prototype.loadAsync = async function (this: OrganizationRef): Promise<Organization | null> {
   if (this instanceof Organization)
     return this;
-  const response = await this.getAsync(`/orgs/${this.login}`);
-  return OrganizationCreator.create(response, this);
+  const response = await this.getAsync<apiTypes.Organization>(`/orgs/${this.login}`);
+  if (response === null)
+    return null;
+  return OrganizationCreator.create(response.data, this);
 }
 
-function loadRepositories(
+function loadRepositoriesAsync(
   type?: "all" | "public" | "private" | "forks" | "sources" | "member",
   sort?: "created" | "updated" | "pushed" | "full_name",
   ascending?: boolean): Promise<Repository[]>;
-async function loadRepositories(
+async function loadRepositoriesAsync(
   this: OrganizationRef,
   type: "all" | "public" | "private" | "forks" | "sources" | "member" = "all",
   sort: "created" | "updated" | "pushed" | "full_name" = "full_name",
@@ -40,7 +42,9 @@ async function loadRepositories(
 {
   if (ascending === undefined)
     ascending = sort === "full_name";
-  const response = await this.getAsync(`/orgs/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
-  return response.map((repository: apiTypes.Repository) => RepositoryCreator.create(repository, this));
+  const response = await this.getAllPagesAsync<apiTypes.Repository>(`/orgs/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
+  if (response === null)
+    throw new Error("Could not load repositories; organization may not exist");
+  return response.map((repository) => RepositoryCreator.create(repository, this));
 }
-OrganizationRef.prototype.loadRepositories = loadRepositories;
+OrganizationRef.prototype.loadRepositoriesAsync = loadRepositoriesAsync;

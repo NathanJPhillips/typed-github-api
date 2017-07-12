@@ -33,11 +33,7 @@ export class Milestone {
 }
 
 export class MilestoneCreator extends Milestone {
-  public static create(data: null, options: OptionsOrRef): null;
-  public static create(data: apiTypes.Milestone, options: OptionsOrRef): Milestone;
-  public static create(data: apiTypes.Milestone | null, options: OptionsOrRef) {
-    if (data === null)
-      return null;
+  public static create(data: apiTypes.Milestone, options: OptionsOrRef): Milestone {
     return new Milestone(data, options);
   }
 }

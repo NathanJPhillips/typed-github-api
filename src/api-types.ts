@@ -161,9 +161,9 @@ export interface Issue {
   labels: Label[];
   state: "open" | "closed";
   locked: boolean;
-  assignee: UserSummary;
-  assignees: User[];
-  milestone: Milestone;
+  assignee: UserSummary | null;
+  assignees: UserSummary[];
+  milestone: Milestone | null;
   comments: number;
   created_at: Date;
   updated_at: Date;
@@ -259,12 +259,12 @@ export interface Repository {
   network_count: number;
 }
 
-export interface SearchResults {
-  total_count: number;
-  incomplete_results: boolean;
-  items: any[];
-}
-
 export interface SearchResult {
   score: number;
+}
+
+export interface SearchResults<T> {
+  total_count: number;
+  incomplete_results: boolean;
+  items: Array<T & SearchResult>;
 }

@@ -17,11 +17,7 @@ export class Label extends GitHubRef {
 }
 
 export class LabelCreator extends Label {
-  public static create(data: null, options: OptionsOrRef): null;
-  public static create(data: apiTypes.Label, options: OptionsOrRef): Label;
-  public static create(data: apiTypes.Label | null, options: OptionsOrRef) {
-    if (data === null)
-      return null;
+  public static create(data: apiTypes.Label, options: OptionsOrRef): Label {
     return new Label(data, options);
   }
 }

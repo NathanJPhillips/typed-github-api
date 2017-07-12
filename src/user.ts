@@ -50,19 +50,11 @@ export class MyUser extends User {
 }
 
 export class UserCreator extends MyUser {
-  public static createSummary(data: null, options: OptionsOrRef): null;
-  public static createSummary(data: apiTypes.UserSummary, options: OptionsOrRef): UserSummary;
-  public static createSummary(data: apiTypes.UserSummary | null, options: OptionsOrRef) {
-    if (data === null)
-      return null;
+  public static createSummary(data: apiTypes.UserSummary, options: OptionsOrRef): UserSummary {
     return new UserSummary(data, options);
   }
 
-  public static create(data: null, options: OptionsOrRef): null;
-  public static create(data: apiTypes.User, options: OptionsOrRef): User;
-  public static create(data: apiTypes.User | null, options: OptionsOrRef) {
-    if (data === null)
-      return null;
+  public static create(data: apiTypes.User, options: OptionsOrRef): User {
     return new User(data, options);
   }
 

@@ -6,7 +6,7 @@ import { Repository, RepositoryCreator } from "./repository";
 
 declare module "./repository-ref" {
   interface RepositoryRef {
-    load(): Promise<Repository | null>;
+    loadAsync(): Promise<Repository | null>;
 
     /**
      * @description Loads issues for this repository.
@@ -21,7 +21,7 @@ declare module "./repository-ref" {
      * @param updatedSince Only issues updated at or after this time are returned
      * @return The resulting array of issues
      */
-    loadIssues(
+    loadIssuesAsync(
       milestone?: number | "*" | "none",
       state?: "open" | "closed" | "all",
       assignee?: string | "*" | "none",
@@ -34,14 +34,16 @@ declare module "./repository-ref" {
   }
 }
 
-RepositoryRef.prototype.load = async function (this: RepositoryRef): Promise<Repository | null> {
+RepositoryRef.prototype.loadAsync = async function (this: RepositoryRef): Promise<Repository | null> {
   if (this instanceof Repository)
     return <Repository>this;
-  const response = await this.getAsync(`/repos/${this.owner.login}/${this.name}`);
-  return RepositoryCreator.create(response, this);
+  const response = await this.getAsync<apiTypes.Repository>(`/repos/${this.owner.login}/${this.name}`);
+  if (response === null)
+    return null;
+  return RepositoryCreator.create(response.data, this);
 }
 
-function loadIssues(
+function loadIssuesAsync(
   milestone?: number | "*" | "none",
   state?: "open" | "closed" | "all",
   assignee?: string | "*" | "none",
@@ -51,7 +53,7 @@ function loadIssues(
   sort?: "created" | "updated" | "comments",
   ascending?: boolean,
   updatedSince?: Date): Promise<Issue[]>;
-async function loadIssues(
+async function loadIssuesAsync(
   this: RepositoryRef,
   milestone?: number | "*" | "none",
   state: "open" | "closed" | "all" = "open",
@@ -78,7 +80,9 @@ async function loadIssues(
   uri += `sort=${sort}&direction=${ascending ? "asc" : "desc"}`;
   if (updatedSince)
     uri += `&since=${updatedSince.toISOString()}`;
-  const response = await this.getAsync(uri);
-  return response.map((issue: apiTypes.Issue) => IssueCreator.create(issue, this));
+  const response = await this.getAllPagesAsync<apiTypes.Issue>(uri);
+  if (response === null)
+    throw new Error("Could not load issues; repository may not exist");
+  return response.map((issue) => IssueCreator.create(issue, this));
 }
-RepositoryRef.prototype.loadIssues = loadIssues;
+RepositoryRef.prototype.loadIssuesAsync = loadIssuesAsync;

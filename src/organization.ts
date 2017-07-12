@@ -16,19 +16,11 @@ export class Organization extends OrganizationSummary {
 }
 
 export class OrganizationCreator extends Organization {
-  public static createSummary(data: null, options: OptionsOrRef): null;
-  public static createSummary(data: apiTypes.OrganizationSummary, options: OptionsOrRef): OrganizationSummary;
-  public static createSummary(data: apiTypes.OrganizationSummary | null, options: OptionsOrRef) {
-    if (data === null)
-      return null;
+  public static createSummary(data: apiTypes.OrganizationSummary, options: OptionsOrRef): OrganizationSummary {
     return new OrganizationSummary(data, options);
   }
 
-  public static create(data: null, options: OptionsOrRef): null;
-  public static create(data: apiTypes.Organization, options: OptionsOrRef): Organization;
-  public static create(data: apiTypes.Organization | null, options: OptionsOrRef) {
-    if (data === null)
-      return null;
+  public static create(data: apiTypes.Organization, options: OptionsOrRef): Organization {
     return new Organization(data, options);
   }
 }

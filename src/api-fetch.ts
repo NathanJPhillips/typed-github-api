@@ -9,13 +9,15 @@ export interface Options {
   oAuthToken?: string;
 }
 
-const nextLinkRegExp = /<([^>]+)>; rel="next"/;
-
-export function getAsync(relativeUri: string, options: Options): Promise<any> {
-  return getAbsoluteAsync(getUri(relativeUri), options);
+export interface Response<T> {
+  data: T;
+  nextLink?: string;
 }
 
-export async function getAbsoluteAsync(uri: string, options: Options): Promise<any> {
+const nextLinkRegExp = /<([^>]+)>; rel="next"/;
+
+export async function getAsync<T>(uri: string, options: Options): Promise<Response<T> | null> {
+  uri = getUri(uri);
   logger.verbose(`Getting GitHub URI: ${uri}`);
   const response = await fetch(uri, getRequestInfo("GET", options));
   // Check whether reached rate limit
@@ -23,7 +25,7 @@ export async function getAbsoluteAsync(uri: string, options: Options): Promise<a
     const rateLimitReset = new Date(parseInt(response.headers.get("X-RateLimit-Reset"), 10) * 1000);
     logger.info(`GitHub rate limit reached, retrying at ${rateLimitReset.toLocaleTimeString()}`);
     await waitUntil(rateLimitReset);
-    return getAbsoluteAsync(uri, options);
+    return getAsync<T>(uri, options);
   }
   // Check response code
   if (response.status == HttpStatusCodes.NotFound)
@@ -37,19 +39,32 @@ export async function getAbsoluteAsync(uri: string, options: Options): Promise<a
   if (Math.floor(response.status / 100) !== Math.floor(HttpStatusCodes.OK / 100))
     throw new Error("Unexpected status code from GitHub: " + response.statusText);
   // Create result
-  const data = await response.json();
+  const result: Response<T> = { data: await response.json() };
   // Get paging information
   const nextLink = response.headers.has("Link") ? nextLinkRegExp.exec(response.headers.get("Link")) : null;
-  if (nextLink === null)
-    return data;
-  else
-    return (<any[]>data).concat(await getAbsoluteAsync(nextLink[1], options));
+  if (nextLink !== null)
+    result.nextLink = nextLink[1];
+  return result;
 }
 
-function getUri(relativeUri: string) {
-  if (relativeUri.length === 0 || relativeUri[0] !== "/")
-    relativeUri = "/" + relativeUri;
-  return "https://api.github.com" + relativeUri;
+export async function getAllPagesAsync<T>(uri: string, options: Options): Promise<T[] | null> {
+  const response: Response<T[]> | null = await getAsync<T[]>(uri, options);
+  if (response === null)
+    return null;
+  if (!response.nextLink)
+    return response.data;
+  const remainingResponse = await getAllPagesAsync<T>(response.nextLink, options);
+  if (remainingResponse === null)
+    throw new Error("Subsequent page of GitHub request returned not found.");
+  return response.data.concat(remainingResponse);
+}
+
+function getUri(uri: string) {
+  if (uri.startsWith("http"))
+    return uri;
+  if (uri.length === 0 || uri[0] !== "/")
+    uri = "/" + uri;
+  return "https://api.github.com" + uri;
 }
 
 function getRequestInfo(method: string, options: Options): fetchTypes.RequestInit {

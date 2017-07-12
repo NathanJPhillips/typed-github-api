@@ -74,11 +74,7 @@ export class Repository extends RepositoryRef {
 }
 
 export class RepositoryCreator extends Repository {
-  public static create(data: null, options: OptionsOrRef): null;
-  public static create(data: apiTypes.Repository, options: OptionsOrRef): Repository;
-  public static create(data: apiTypes.Repository | null, options: OptionsOrRef) {
-    if (data === null)
-      return null;
+  public static create(data: apiTypes.Repository, options: OptionsOrRef): Repository {
     return new Repository(data, options);
   }
 }

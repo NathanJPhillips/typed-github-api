@@ -12,11 +12,11 @@ export class GitHubRef {
       this.options = options;
   }
 
-  public getAsync(relativeUri: string) {
-    return fetch.getAsync(relativeUri, this.options);
+  public getAsync<T>(uri: string) {
+    return fetch.getAsync<T>(uri, this.options);
   }
 
-  protected getAbsoluteAsync(uri: string) {
-    return fetch.getAbsoluteAsync(uri, this.options);
+  public getAllPagesAsync<T>(uri: string) {
+    return fetch.getAllPagesAsync<T>(uri, this.options);
   }
 }

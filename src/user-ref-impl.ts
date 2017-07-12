@@ -5,7 +5,7 @@ import { User, UserCreator } from "./user";
 
 declare module "./user-ref" {
   interface UserRef {
-    load(): Promise<User | null>;
+    loadAsync(): Promise<User | null>;
 
     /**
      * @description Loads repositories accessible to this user.
@@ -14,25 +14,27 @@ declare module "./user-ref" {
      * @param ascending Whether to sort ascending rather than descending (default false unless sorting by full_name)
      * @return The resulting array of repositories
      */
-    loadRepositories(
+    loadRepositoriesAsync(
       type?: "all" | "owner" | "member",
       sort?: "created" | "updated" | "pushed" | "full_name",
       ascending?: boolean): Promise<Repository[]>;
   }
 }
 
-UserRef.prototype.load = async function (this: UserRef): Promise<User | null> {
+UserRef.prototype.loadAsync = async function (this: UserRef): Promise<User | null> {
   if (this instanceof User)
     return <User>this;
-  const response = await this.getAsync(`/users/${this.login}`);
-  return UserCreator.create(response, this);
+  const response = await this.getAsync<apiTypes.User>(`/users/${this.login}`);
+  if (response === null)
+    return null;
+  return UserCreator.create(response.data, this);
 }
 
-function loadRepositories(
+function loadRepositoriesAsync(
   type?: "all" | "owner" | "member",
   sort?: "created" | "updated" | "pushed" | "full_name",
   ascending?: boolean): Promise<Repository[]>;
-async function loadRepositories(
+async function loadRepositoriesAsync(
   this: UserRef,
   type: "all" | "owner" | "member" = "owner",
   sort: "created" | "updated" | "pushed" | "full_name" = "full_name",
@@ -40,7 +42,9 @@ async function loadRepositories(
 {
   if (ascending === undefined)
     ascending = sort === "full_name";
-  const response = await this.getAsync(`/users/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
-  return response.map((repository: apiTypes.Repository) => RepositoryCreator.create(repository, this));
+  const response = await this.getAllPagesAsync<apiTypes.Repository>(`/users/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
+  if (response === null)
+    throw new Error("Could not load repositories; user may not exist");
+  return response.map((repository) => RepositoryCreator.create(repository, this));
 }
-UserRef.prototype.loadRepositories = loadRepositories;
+UserRef.prototype.loadRepositoriesAsync = loadRepositoriesAsync;
