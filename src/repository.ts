@@ -1,9 +1,15 @@
+import * as moment from "moment";
+
 import * as apiTypes from "./api-types";
 import { OptionsOrRef } from "./github-ref";
-import { RepositoryRef } from "./repository-ref";
-import { UserSummary, UserCreator } from "./user";
+import { RepositoryRefClass } from "./repository-ref";
+import { UserSummaryClass } from "./user";
 
-export class Repository extends RepositoryRef {
+import { Repository } from "./interfaces/repository";
+import { UserSummary } from "./interfaces/user";
+
+
+export class RepositoryClass extends RepositoryRefClass implements Repository {
   public owner: UserSummary;
 
   public id: number;
@@ -25,9 +31,9 @@ export class Repository extends RepositoryRef {
   public hasWiki: boolean;
   public hasPages: boolean;
   public hasDownloads: boolean;
-  public pushed: Date;
-  public created: Date;
-  public updated: Date;
+  public pushed: moment.Moment;
+  public created: moment.Moment;
+  public updated: moment.Moment;
   public permissions: {
     admin: boolean;
     push: boolean;
@@ -39,8 +45,8 @@ export class Repository extends RepositoryRef {
   public subscribersCount: number;
   public networkCount: number;
 
-  protected constructor(repository: apiTypes.Repository, options: OptionsOrRef) {
-    const owner = UserCreator.createSummary(repository.owner, options);
+  public constructor(repository: apiTypes.Repository, options: OptionsOrRef) {
+    const owner = new UserSummaryClass(repository.owner, options);
     super(owner, repository.name);
     this.owner = owner;
     this.id = repository.id;
@@ -50,7 +56,8 @@ export class Repository extends RepositoryRef {
     this.isFork = repository.fork;
     this.htmlUri = repository.html_url;
     this.homePage = repository.homepage;
-    this.language = repository.language ? repository.language : undefined;
+    if (repository.language)
+      this.language = repository.language;
     this.forksCount = repository.forks_count;
     this.starGazersCount = repository.stargazers_count;
     this.watchersCount = repository.watchers_count;
@@ -62,19 +69,13 @@ export class Repository extends RepositoryRef {
     this.hasWiki = repository.has_wiki;
     this.hasPages = repository.has_pages;
     this.hasDownloads = repository.has_downloads;
-    this.pushed = repository.pushed_at;
-    this.created = repository.created_at;
-    this.updated = repository.updated_at;
+    this.pushed = moment(repository.pushed_at);
+    this.created = moment(repository.created_at);
+    this.updated = moment(repository.updated_at);
     this.permissions = repository.permissions;
     this.allowRebasemerge = repository.allow_rebase_merge;
     this.allowSquashMerge = repository.allow_squash_merge;
     this.subscribersCount = repository.subscribers_count;
     this.networkCount = repository.network_count;
-  }
-}
-
-export class RepositoryCreator extends Repository {
-  public static create(data: apiTypes.Repository, options: OptionsOrRef): Repository {
-    return new Repository(data, options);
   }
 }

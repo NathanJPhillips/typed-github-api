@@ -1,26 +1,17 @@
 import * as apiTypes from "./api-types";
 import { OptionsOrRef } from "./github-ref";
-import { OrganizationRef } from "./organization-ref";
+import { OrganizationRefClass } from "./organization-ref";
 
+import { Organization, OrganizationSummary } from "./interfaces/organization";
 
-export class OrganizationSummary extends OrganizationRef {
-  protected constructor(data: apiTypes.OrganizationSummary, options: OptionsOrRef) {
+export class OrganizationSummaryClass extends OrganizationRefClass implements OrganizationSummary {
+  public constructor(data: apiTypes.OrganizationSummary, options: OptionsOrRef) {
     super(data.login, options);
   }
 }
 
-export class Organization extends OrganizationSummary {
-  protected constructor(data: apiTypes.Organization, options: OptionsOrRef) {
+export class OrganizationClass extends OrganizationSummaryClass implements Organization {
+  public constructor(data: apiTypes.Organization, options: OptionsOrRef) {
     super(data, options);
-  }
-}
-
-export class OrganizationCreator extends Organization {
-  public static createSummary(data: apiTypes.OrganizationSummary, options: OptionsOrRef): OrganizationSummary {
-    return new OrganizationSummary(data, options);
-  }
-
-  public static create(data: apiTypes.Organization, options: OptionsOrRef): Organization {
-    return new Organization(data, options);
   }
 }

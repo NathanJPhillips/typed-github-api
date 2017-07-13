@@ -1,50 +1,37 @@
 import * as apiTypes from "./api-types";
-import { Repository, RepositoryCreator } from "./repository";
-import { UserRef } from "./user-ref";
-import { User, UserCreator } from "./user";
+import { RepositoryClass } from "./repository";
+import { UserClass } from "./user";
+import { UserRefClass } from "./user-ref";
 
-declare module "./user-ref" {
-  interface UserRef {
-    loadAsync(): Promise<User | null>;
+import { Repository } from "./interfaces/repository";
+import { User } from "./interfaces/user";
 
-    /**
-     * @description Loads repositories accessible to this user.
-     * @param type The type of search (default owner)
-     * @param sort The field to sort by (default full_name)
-     * @param ascending Whether to sort ascending rather than descending (default false unless sorting by full_name)
-     * @return The resulting array of repositories
-     */
-    loadRepositoriesAsync(
-      type?: "all" | "owner" | "member",
-      sort?: "created" | "updated" | "pushed" | "full_name",
-      ascending?: boolean): Promise<Repository[]>;
-  }
-}
 
-UserRef.prototype.loadAsync = async function (this: UserRef): Promise<User | null> {
-  if (this instanceof User)
-    return <User>this;
+UserRefClass.prototype.loadAsync = async function (this: UserRefClass): Promise<User | null> {
+  if (this instanceof UserClass)
+    return <UserClass>this;
   const response = await this.getAsync<apiTypes.User>(`/users/${this.login}`);
   if (response === null)
     return null;
-  return UserCreator.create(response.data, this);
-}
+  return new UserClass(response.data, this);
+};
 
 function loadRepositoriesAsync(
   type?: "all" | "owner" | "member",
   sort?: "created" | "updated" | "pushed" | "full_name",
   ascending?: boolean): Promise<Repository[]>;
 async function loadRepositoriesAsync(
-  this: UserRef,
+  this: UserRefClass,
   type: "all" | "owner" | "member" = "owner",
   sort: "created" | "updated" | "pushed" | "full_name" = "full_name",
   ascending?: boolean): Promise<Repository[]>
 {
   if (ascending === undefined)
     ascending = sort === "full_name";
-  const response = await this.getAllPagesAsync<apiTypes.Repository>(`/users/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
+  const response = await this.getAllPagesAsync<apiTypes.Repository>(
+    `/users/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
   if (response === null)
     throw new Error("Could not load repositories; user may not exist");
-  return response.map((repository) => RepositoryCreator.create(repository, this));
+  return response.map((repository) => new RepositoryClass(repository, this));
 }
-UserRef.prototype.loadRepositoriesAsync = loadRepositoriesAsync;
+UserRefClass.prototype.loadRepositoriesAsync = loadRepositoriesAsync;

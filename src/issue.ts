@@ -1,10 +1,18 @@
+import * as moment from "moment";
+
 import * as apiTypes from "./api-types";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
-import { Label, LabelCreator } from "./label";
-import { Milestone, MilestoneCreator } from "./milestone";
-import { UserSummary, UserCreator } from "./user";
+import { LabelClass } from "./label";
+import { MilestoneClass } from "./milestone";
+import { UserSummaryClass } from "./user";
 
-export class Issue extends GitHubRef {
+import { Issue } from "./interfaces/issue";
+import { Label } from "./interfaces/label";
+import { Milestone } from "./interfaces/milestone";
+import { UserSummary } from "./interfaces/user";
+
+
+export class IssueClass extends GitHubRef implements Issue {
   private repositoryUri: string;
 
   public readonly uri: string;
@@ -16,26 +24,26 @@ export class Issue extends GitHubRef {
   public body: string;
   public comments: number;
 
-  public user: UserSummary;   // Is this createdBy?
   public assignee?: UserSummary;
   public assignees: UserSummary[];
   public labels: Label[];
   public milestone?: Milestone;
 
-  public created: Date;
-  public closed?: Date;
+  public created: moment.Moment;
+  public createdBy: UserSummary;
+  public closed?: moment.Moment;
   public closedBy?: UserSummary;
-  public updated: Date;
+  public updated: moment.Moment;
 
-  public get isOpen() { return !this.closed; }
-  public get age() { return (!this.closed ? Date.now() : this.closed.getTime()) - this.created.getTime(); }
-  public wasOpenAtDate(when: Date) {
+  public get isOpen(): boolean { return !this.closed; }
+  public get age(): moment.Duration { return moment.duration((!this.closed ? moment() : this.closed).diff(this.created)); }
+  public wasOpen(when: moment.Moment): boolean {
     return this.created <= when && (!this.closed || this.closed > when);
-  };
+  }
 
   public locked: boolean;
 
-  protected constructor(data: apiTypes.Issue, options: OptionsOrRef) {
+  public constructor(data: apiTypes.Issue, options: OptionsOrRef) {
     super(options);
     this.repositoryUri = data.repository_url;
     this.uri = data.url;
@@ -45,17 +53,22 @@ export class Issue extends GitHubRef {
     this.title = data.title;
     this.body = data.body;
     this.comments = data.comments;
-    this.user = UserCreator.createSummary(data.user, this);
+    this.createdBy = new UserSummaryClass(data.user, this);
     if (data.assignee)
-      this.assignee = UserCreator.createSummary(data.assignee, this);
-    this.assignees = data.assignees.map((assignee) => UserCreator.createSummary(assignee, this));
-    this.labels = data.labels.map((label) => LabelCreator.create(label, this));
+      this.assignee = new UserSummaryClass(data.assignee, this);
+    this.assignees = data.assignees.map((assignee) => new UserSummaryClass(assignee, this));
+    this.labels = data.labels.map((label) => new LabelClass(label, this));
     if (data.milestone)
-      this.milestone = MilestoneCreator.create(data.milestone, this);
-    this.created = data.created_at; // TODO: May need new Date(...)
-    this.closed = data.closed_at || undefined;
+      this.milestone = new MilestoneClass(data.milestone, this);
+    this.created = moment(data.created_at);
+    if (data.closed_at)
+      this.closed = moment(data.closed_at);
     if (data.closed_by)
-      this.closedBy = UserCreator.createSummary(data.closed_by, this);
-    this.updated = data.updated_at;
+      this.closedBy = new UserSummaryClass(data.closed_by, this);
+    this.updated = moment(data.updated_at);
+  }
+
+  public loadAsync(): Promise<Issue | null> {
+    throw new Error("Method not implemented.");
   }
 }

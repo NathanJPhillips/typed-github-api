@@ -1,26 +1,31 @@
 import { GitHubRef, OptionsOrRef } from "./github-ref";
-import { RepositoryRef, RepositoryRefCreator } from "./repository-ref";
+import { RepositoryRefClass } from "./repository-ref";
 
-export class UserRef extends GitHubRef {
+import { Repository, RepositoryRef } from "./interfaces/repository";
+import { User, UserRef } from "./interfaces/user";
+
+
+export class UserRefClass extends GitHubRef implements UserRef {
   public login: string;
 
-  protected constructor(login: string, options: OptionsOrRef) {
+  public constructor(login: string, options: OptionsOrRef) {
     super(options);
     this.login = login;
   }
 
   public getRepository(name: string): RepositoryRef {
-    return RepositoryRefCreator.create(this, name);
-  }
-}
-
-export class UserRefCreator extends UserRef {
-  private constructor(login: string, options: OptionsOrRef) {
-    super(login, options);
+    return new RepositoryRefClass(this, name);
   }
 
-  public static create(login: string, options: OptionsOrRef): UserRef {
-    return new UserRefCreator(login, options);
-    //return new UserRef(login, options);
+  public loadAsync(): Promise<User | null> {
+    throw new Error("Method not implemented.");
+  }
+
+  public loadRepositoriesAsync(
+    _type?: "all" | "owner" | "member" | undefined,
+    _sort?: "created" | "updated" | "pushed" | "full_name" | undefined,
+    _ascending?: boolean | undefined): Promise<Repository[]>
+  {
+    throw new Error("Method not implemented.");
   }
 }

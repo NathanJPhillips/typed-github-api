@@ -1,10 +1,16 @@
+import * as moment from "moment";
+
 import * as apiTypes from "./api-types";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
-import { Issue } from "./issue";
-import { IssueCreator } from "./pull-request";
-import { OrganizationRef, OrganizationRefCreator } from "./organization-ref";
-import { UserRef, UserRefCreator } from "./user-ref";
-import { Repository, RepositoryCreator } from "./repository";
+import { OrganizationRefClass } from "./organization-ref";
+import { createIssue } from "./pull-request";
+import { RepositoryClass } from "./repository";
+import { UserRefClass } from "./user-ref";
+
+import { Issue } from "./interfaces/issue";
+import { OrganizationRef } from "./interfaces/organization";
+import { Repository } from "./interfaces/repository";
+import { UserRef } from "./interfaces/user";
 
 
 export interface SearchResult<T> {
@@ -18,11 +24,11 @@ export class GitHubApi extends GitHubRef {
   }
 
   public getUser(login: string): UserRef {
-    return UserRefCreator.create(login, this);
+    return new UserRefClass(login, this);
   }
 
   public getOrganization(login: string): OrganizationRef {
-    return OrganizationRefCreator.create(login, this);
+    return new OrganizationRefClass(login, this);
   }
 
   public async loadMyRepositoriesAsync(
@@ -33,7 +39,8 @@ export class GitHubApi extends GitHubRef {
   {
     if (ascending === undefined)
       ascending = sort === "full_name";
-    const response = await this.getAllPagesAsync(`/user/repos?visibility=${visibility}&affiliation=${affiliation.join(",")}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
+    const response = await this.getAllPagesAsync(
+      `/user/repos?visibility=${visibility}&affiliation=${affiliation.join(",")}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
     if (response === null)
       throw new Error("Couldn't retrieve the current user's repositories");
     return response.map(this.getRepository);
@@ -45,7 +52,7 @@ export class GitHubApi extends GitHubRef {
     labels: string[] = [],
     sort: "created" | "updated" | "comments" = "created",
     ascending: boolean = false,
-    updatedSince?: Date): Promise<Issue[]>
+    updatedSince?: moment.Moment): Promise<Issue[]>
   {
     let uri = `/issues?filter=${filter}&state=${state}&labels=${labels.join(",")}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`;
     if (updatedSince)
@@ -111,7 +118,7 @@ export class GitHubApi extends GitHubRef {
     query: string,
     sort: "stars" | "forks" | "updated" | "best match" = "best match",
     ascending: boolean = false,
-    perPage: number = 100): Promise<SearchResult<Repository>[]>
+    perPage: number = 100): Promise<Array<SearchResult<Repository>>>
   {
     const mapping = (repo: apiTypes.Repository & apiTypes.SearchResult) => ({
       result: this.getRepository(repo),
@@ -149,7 +156,7 @@ export class GitHubApi extends GitHubRef {
     query: string,
     sort: "comments" | "created" | "updated" | "best match" = "best match",
     ascending: boolean = false,
-    perPage: number = 100): Promise<SearchResult<Issue>[]>
+    perPage: number = 100): Promise<Array<SearchResult<Issue>>>
   {
     const mapping = (issue: apiTypes.Issue & apiTypes.SearchResult) => ({
       result: this.getIssue(issue),
@@ -158,6 +165,6 @@ export class GitHubApi extends GitHubRef {
     return this.searchAsync("/search/issues", query, sort, ascending, perPage, mapping);
   }
 
-  private getRepository(repository: apiTypes.Repository) { return RepositoryCreator.create(repository, this); }
-  private getIssue(issue: apiTypes.Issue) { return IssueCreator.create(issue, this); }
+  private getRepository(repository: apiTypes.Repository) { return new RepositoryClass(repository, this); }
+  private getIssue(issue: apiTypes.Issue) { return createIssue(issue, this); }
 }

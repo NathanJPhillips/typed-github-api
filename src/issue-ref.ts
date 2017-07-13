@@ -1,24 +1,21 @@
 import { GitHubRef } from "./github-ref";
-import { RepositoryRef } from "./repository-ref";
+import { RepositoryRefClass } from "./repository-ref";
 
-export class IssueRef extends GitHubRef {
+import { Issue, IssueRef } from "./interfaces/issue";
+import { RepositoryRef } from "./interfaces/repository";
+
+
+export class IssueRefClass extends GitHubRef implements IssueRef {
   public readonly repository: RepositoryRef;
   public readonly number: number;
 
-  protected constructor(repository: RepositoryRef, issueNumber: number) {
+  public constructor(repository: RepositoryRefClass, issueNumber: number) {
     super(repository);
     this.repository = repository;
     this.number = issueNumber;
   }
-}
 
-export class IssueRefCreator extends IssueRef {
-  private constructor(repository: RepositoryRef, issueNumber: number) {
-    super(repository, issueNumber);
-  }
-
-  public static create(repository: RepositoryRef, issueNumber: number) {
-    return new IssueRefCreator(repository, issueNumber);
-    //return new IssueRef(repository, issueNumber);
+  public loadAsync(): Promise<Issue | null> {
+    throw new Error("Method not implemented.");
   }
 }

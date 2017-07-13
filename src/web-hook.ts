@@ -8,9 +8,11 @@ import { RequestWithRawBody } from "./utils/request-with-rawbody";
 
 import * as apiTypes from "./api-types";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
-import { Issue } from "./issue";
-import { IssueCreator } from "./pull-request";
-import { UserSummary, UserCreator } from "./user";
+import { createIssue } from "./pull-request";
+import { UserSummaryClass } from "./user";
+
+import { Issue } from "./interfaces/issue";
+import { UserSummary } from "./interfaces/user";
 
 
 export interface WebHookData {
@@ -84,7 +86,7 @@ export abstract class WebHook<TData extends WebHookData, TApiData extends apiTyp
       id: id,
       event: event,
       action: data.action,
-      sender: UserCreator.createSummary(data.sender, this),
+      sender: new UserSummaryClass(data.sender, this),
     };
     this.handlers.handleAsync(this.convertData(request, data));
   }
@@ -115,7 +117,7 @@ export class IssueWebHook extends WebHook<IssueWebHookData, apiTypes.IssueWebHoo
       event: request.event,
       sender: request.sender,
       action: data.action,
-      issue: IssueCreator.create(data.issue, this),
+      issue: createIssue(data.issue, this),
     };
   }
 }

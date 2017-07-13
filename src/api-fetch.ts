@@ -1,4 +1,5 @@
 import { Codes as HttpStatusCodes } from "blow-http-statuses";
+import * as moment from "moment";
 import * as fetchTypes from "node-fetch";
 import fetch from "node-fetch";
 import * as logger from "winston";
@@ -21,16 +22,16 @@ export async function getAsync<T>(uri: string, options: Options): Promise<Respon
   logger.verbose(`Getting GitHub URI: ${uri}`);
   const response = await fetch(uri, getRequestInfo("GET", options));
   // Check whether reached rate limit
-  if (response.headers.has("X-RateLimit-Remaining") && parseInt(response.headers.get("X-RateLimit-Remaining")) <= 0) {
-    const rateLimitReset = new Date(parseInt(response.headers.get("X-RateLimit-Reset"), 10) * 1000);
-    logger.info(`GitHub rate limit reached, retrying at ${rateLimitReset.toLocaleTimeString()}`);
+  if (response.headers.has("X-RateLimit-Remaining") && parseInt(response.headers.get("X-RateLimit-Remaining"), 10) <= 0) {
+    const rateLimitReset = moment(parseInt(response.headers.get("X-RateLimit-Reset"), 10) * 1000);
+    logger.info(`GitHub rate limit reached, retrying at ${rateLimitReset.format("LTS")}`);
     await waitUntil(rateLimitReset);
     return getAsync<T>(uri, options);
   }
   // Check response code
-  if (response.status == HttpStatusCodes.NotFound)
+  if (response.status === HttpStatusCodes.NotFound)
     return null;
-  if (response.status == HttpStatusCodes.Unauthorized) {
+  if (response.status === HttpStatusCodes.Unauthorized) {
     if (options.oAuthToken)
       throw new Error("Your token does not have permissions to view the requested resource");
     else
@@ -79,8 +80,10 @@ function getRequestInfo(method: string, options: Options): fetchTypes.RequestIni
   };
 }
 
-function waitUntil(when: Date): Promise<void> {
-  return new Promise<void>(function (resolve, _reject) {
-    setTimeout(() => resolve(), when.getTime() - Date.now());
-  });
+function waitUntil(when: moment.Moment): Promise<void> {
+  const delay = when.diff(moment());
+  if (delay <= 0)
+    return Promise.resolve();
+  else
+    return new Promise<void>(function (resolve) { setTimeout(() => resolve(), delay); });
 }

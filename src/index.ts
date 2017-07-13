@@ -1,21 +1,19 @@
 import { GitHubApi } from "./github-api";
 
 export { Options } from "./api-fetch";
-export { Issue } from "./issue";
-import { IssueRef } from "./issue-ref";
-import "./issue-ref-impl";
-export { IssueRef };
-export { Label } from "./label";
-export { Milestone } from "./milestone";
-export { Repository } from "./repository";
-import { RepositoryRef } from "./repository-ref";
-import "./repository-ref-impl";
-export { RepositoryRef };
-export { User } from "./user";
-import { UserRef } from "./user-ref";
-import "./user-ref-impl";
-export { UserRef };
+export { IssueRef, Issue } from "./interfaces/issue";
+export { Label } from "./interfaces/label";
+export { Milestone } from "./interfaces/milestone";
+export { OrganizationRef, OrganizationSummary, Organization } from "./interfaces/organization";
+export { RepositoryRef, Repository } from "./interfaces/repository";
+export { UserRef, UserSummary, User, MyUser } from "./interfaces/user";
+
 export { IssueWebHookData, IssueWebHook } from "./web-hook";
+
 export { RequestWithRawBody } from "./utils/request-with-rawbody";
+
+import "./issue-ref-impl";
+import "./repository-ref-impl";
+import "./user-ref-impl";
 
 export default GitHubApi;

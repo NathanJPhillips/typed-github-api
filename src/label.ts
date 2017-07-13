@@ -1,23 +1,20 @@
 import * as apiTypes from "./api-types";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
 
-export class Label extends GitHubRef {
+import { Label } from "./interfaces/label";
+
+
+export class LabelClass extends GitHubRef implements Label {
   public id: number;
   public name: string;
   public color: string;
   public default: boolean;
 
-  protected constructor(data: apiTypes.Label, options: OptionsOrRef) {
+  public constructor(data: apiTypes.Label, options: OptionsOrRef) {
     super(options);
     this.id = data.id;
     this.name = data.name;
     this.color = data.color;
     this.default = data.default;
-  }
-}
-
-export class LabelCreator extends Label {
-  public static create(data: apiTypes.Label, options: OptionsOrRef): Label {
-    return new Label(data, options);
   }
 }

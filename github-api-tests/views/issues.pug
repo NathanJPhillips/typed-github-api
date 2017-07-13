@@ -8,7 +8,7 @@ block content
   ul(class="item-list")
     each issue in issues
       li
-        img(src=issue.user.avatarUri class="avatar")
+        img(src=issue.createdBy.avatarUri class="avatar")
         span
             a(href=`/repos/${repo.owner.login}/${repo.name}/issues/${issue.number}`)= "#" + issue.number
         div(class="description")= issue.title

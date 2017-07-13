@@ -1,8 +1,14 @@
+import * as moment from "moment";
+
 import * as apiTypes from "./api-types";
 import { OptionsOrRef } from "./github-ref";
-import { UserSummary, UserCreator } from "./user";
+import { UserSummaryClass } from "./user";
 
-export class Milestone {
+import { Milestone } from "./interfaces/milestone";
+import { UserSummary } from "./interfaces/user";
+
+
+export class MilestoneClass implements Milestone {
   public id: number;
   public number: number;
   public title: string;
@@ -11,29 +17,24 @@ export class Milestone {
   public openIssueCount: number;
   public closedIssueCount: number;
   public state: "open" | "closed";
-  public created: Date;
-  public updated: Date;
-  public due: Date;
-  public closed?: Date;
+  public created: moment.Moment;
+  public updated: moment.Moment;
+  public due: moment.Moment;
+  public closed?: moment.Moment;
 
-  protected constructor(data: apiTypes.Milestone, options: OptionsOrRef) {
+  public constructor(data: apiTypes.Milestone, options: OptionsOrRef) {
     this.id = data.id;
     this.number = data.number;
     this.title = data.title;
     this.description = data.description;
-    this.creator = UserCreator.createSummary(data.creator, options);
+    this.creator = new UserSummaryClass(data.creator, options);
     this.openIssueCount = data.open_issues;
     this.closedIssueCount = data.closed_issues;
     this.state = data.state;
-    this.created = data.created_at;
-    this.updated = data.updated_at;
-    this.due = data.due_on;
-    this.closed = data.closed_at || undefined;
-  }
-}
-
-export class MilestoneCreator extends Milestone {
-  public static create(data: apiTypes.Milestone, options: OptionsOrRef): Milestone {
-    return new Milestone(data, options);
+    this.created = moment(data.created_at);
+    this.updated = moment(data.updated_at);
+    this.due = moment(data.due_on);
+    if (data.closed_at)
+      this.closed = moment(data.closed_at);
   }
 }
