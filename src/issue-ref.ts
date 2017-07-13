@@ -2,7 +2,7 @@ import { GitHubRef } from "./github-ref";
 import { RepositoryRefClass } from "./repository-ref";
 
 import { Issue, IssueRef } from "./interfaces/issue";
-import { RepositoryRef } from "./interfaces/repository";
+import { Repository, RepositoryRef } from "./interfaces/repository";
 
 
 export class IssueRefClass extends GitHubRef implements IssueRef {
@@ -17,5 +17,12 @@ export class IssueRefClass extends GitHubRef implements IssueRef {
 
   public loadAsync(): Promise<Issue | null> {
     throw new Error("Method not implemented.");
+  }
+
+  public loadRepositoryAsync(): Promise<Repository> {
+    const response = this.repository.loadAsync();
+    if (response === null)
+      throw new Error("Could not load repository; issue may not exist");
+    return response;
   }
 }

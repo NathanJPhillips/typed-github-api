@@ -2,12 +2,14 @@ import * as moment from "moment";
 
 import { Label } from "./label";
 import { Milestone } from "./milestone";
+import { Repository } from "./repository";
 import { UserSummary } from "./user";
 
 export interface IssueRef {
   readonly number: number;
 
   loadAsync(): Promise<Issue | null>;
+  loadRepositoryAsync(): Promise<Repository>;
 }
 
 export interface Issue extends IssueRef {

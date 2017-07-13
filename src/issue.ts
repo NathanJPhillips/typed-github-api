@@ -4,11 +4,13 @@ import * as apiTypes from "./api-types";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
 import { LabelClass } from "./label";
 import { MilestoneClass } from "./milestone";
+import { RepositoryClass } from "./repository";
 import { UserSummaryClass } from "./user";
 
 import { Issue } from "./interfaces/issue";
 import { Label } from "./interfaces/label";
 import { Milestone } from "./interfaces/milestone";
+import { Repository } from "./interfaces/repository";
 import { UserSummary } from "./interfaces/user";
 
 
@@ -70,5 +72,12 @@ export class IssueClass extends GitHubRef implements Issue {
 
   public loadAsync(): Promise<Issue | null> {
     throw new Error("Method not implemented.");
+  }
+
+  public async loadRepositoryAsync(): Promise<Repository> {
+    const response = await this.getAsync<apiTypes.Repository>(this.repositoryUri);
+    if (response === null)
+      throw new Error("Could not load repository for already loaded issue");
+    return new RepositoryClass(response.data, this);
   }
 }
