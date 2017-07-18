@@ -19,8 +19,8 @@ export class IssueRefClass extends GitHubRef implements IssueRef {
     throw new Error("Method not implemented.");
   }
 
-  public loadRepositoryAsync(): Promise<Repository> {
-    const response = this.repository.loadAsync();
+  public async loadRepositoryAsync(): Promise<Repository> {
+    const response = await this.repository.loadAsync();
     if (response === null)
       throw new Error("Could not load repository; issue may not exist");
     return response;
