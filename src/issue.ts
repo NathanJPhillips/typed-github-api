@@ -17,7 +17,6 @@ import { UserSummary } from "./interfaces/user";
 export class IssueClass extends GitHubRef implements Issue {
   private repositoryUri: string;
 
-  public readonly uri: string;
   public number: number;
 
   public id: number;
@@ -25,6 +24,7 @@ export class IssueClass extends GitHubRef implements Issue {
   public title: string;
   public body: string;
   public comments: number;
+  public htmlUri: string;
 
   public assignee?: UserSummary;
   public assignees: UserSummary[];
@@ -48,13 +48,13 @@ export class IssueClass extends GitHubRef implements Issue {
   public constructor(data: apiTypes.Issue, options: OptionsOrRef) {
     super(options);
     this.repositoryUri = data.repository_url;
-    this.uri = data.url;
     this.number = data.number;
     this.id = data.id;
     this.state = data.state;
     this.title = data.title;
     this.body = data.body;
     this.comments = data.comments;
+    this.htmlUri = data.html_url;
     this.createdBy = new UserSummaryClass(data.user, this);
     if (data.assignee)
       this.assignee = new UserSummaryClass(data.assignee, this);

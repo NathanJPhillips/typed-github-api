@@ -13,7 +13,6 @@ export interface IssueRef {
 }
 
 export interface Issue extends IssueRef {
-  readonly uri: string;
   number: number;
 
   id: number;
@@ -21,6 +20,7 @@ export interface Issue extends IssueRef {
   title: string;
   body: string;
   comments: number;
+  htmlUri: string;
 
   createdBy: UserSummary;
   assignee?: UserSummary;
