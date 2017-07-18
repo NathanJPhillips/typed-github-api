@@ -14,7 +14,7 @@ export interface UserRef {
    * @param type The type of search (default owner)
    * @param sort The field to sort by (default full_name)
    * @param ascending Whether to sort ascending rather than descending (default false unless sorting by full_name)
-   * @return The resulting array of repositories
+   * @returns The resulting array of repositories
    */
   loadRepositoriesAsync(
     type?: "all" | "owner" | "member",

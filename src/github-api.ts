@@ -95,7 +95,7 @@ export class GitHubApi extends GitHubRef {
    * @param sort The field to sort by (default best match)
    * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
    * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
-   * @return An array of repositories that match the query
+   * @returns An array of repositories that match the query
    */
   public searchRepositoriesAsync(
     query: string,
@@ -112,7 +112,7 @@ export class GitHubApi extends GitHubRef {
    * @param sort The field to sort by (default best match)
    * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
    * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
-   * @return An array of repositories that match the query with a score as to how well they matched
+   * @returns An array of repositories that match the query with a score as to how well they matched
    */
   public searchRepositoriesWithScoreAsync(
     query: string,
@@ -133,7 +133,7 @@ export class GitHubApi extends GitHubRef {
    * @param sort The field to sort by (default best match)
    * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
    * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
-   * @return An array of issues that match the query
+   * @returns An array of issues that match the query
    */
   public async searchIssuesAsync(
     query: string,
@@ -150,7 +150,7 @@ export class GitHubApi extends GitHubRef {
    * @param sort The field to sort by (default best match)
    * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
    * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
-   * @return An array of issues that match the query with a score as to how well they matched
+   * @returns An array of issues that match the query with a score as to how well they matched
    */
   public async searchIssuesWithScoreAsync(
     query: string,

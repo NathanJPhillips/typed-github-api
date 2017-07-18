@@ -12,7 +12,7 @@ export interface OrganizationRef {
    * @param type The type of repository to return (default all)
    * @param sort The field to sort by (default full_name)
    * @param ascending Whether to sort ascending rather than descending (default false unless sorting by full_name)
-   * @return The resulting array of repositories
+   * @returns The resulting array of repositories
    */
   loadRepositoriesAsync(
     type?: "all" | "public" | "private" | "forks" | "sources" | "member",
