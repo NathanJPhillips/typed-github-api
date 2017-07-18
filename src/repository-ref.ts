@@ -1,10 +1,12 @@
 import * as moment from "moment";
 
+import { CommitRefClass } from "./commit-ref";
 import { GitHubRef } from "./github-ref";
 import { IssueRefClass } from "./issue-ref";
 import { OrganizationRefClass } from "./organization-ref";
 import { UserRefClass } from "./user-ref";
 
+import { CommitRef } from "./interfaces/commit";
 import { Issue, IssueRef } from "./interfaces/issue";
 import { OrganizationRef } from "./interfaces/organization";
 import { Repository, RepositoryRef } from "./interfaces/repository";
@@ -19,6 +21,10 @@ export class RepositoryRefClass extends GitHubRef implements RepositoryRef {
     super(owner);
     this.owner = owner;
     this.name = name;
+  }
+
+  public getCommit(sha: string): CommitRef {
+    return new CommitRefClass(this, sha);
   }
 
   public getIssue(issueNumber: number): IssueRef {
