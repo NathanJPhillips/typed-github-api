@@ -8,7 +8,8 @@ import { Commit, GitCommit } from "./interfaces/commit";
 CommitRefClass.prototype.loadAsync = async function (this: CommitRefClass): Promise<Commit | null> {
   if (this instanceof CommitClass)
     return <CommitClass>this;
-  const response = await this.getAsync<apiTypes.Commit>(`/repos/${this.repository.owner.login}/${this.repository.name}/commits/${this.sha}`);
+  const response = await this.getAsync<apiTypes.Commit>(
+    `/repos/${encodeURIComponent(this.repository.owner.login)}/${encodeURIComponent(this.repository.name)}/commits/${encodeURIComponent(this.sha)}`);
   if (response === null)
     return null;
   return new CommitClass(this.repository, response.data);
@@ -17,7 +18,8 @@ CommitRefClass.prototype.loadAsync = async function (this: CommitRefClass): Prom
 CommitRefClass.prototype.loadGitAsync = async function (this: CommitRefClass): Promise<GitCommit | null> {
   if (this instanceof GitCommitClass)
     return <GitCommitClass>this;
-  const response = await this.getAsync<apiTypes.GitCommit>(`/repos/${this.repository.owner.login}/${this.repository.name}/git/commits/${this.sha}`);
+  const response = await this.getAsync<apiTypes.GitCommit>(
+    `/repos/${encodeURIComponent(this.repository.owner.login)}/${encodeURIComponent(this.repository.name)}/git/commits/${encodeURIComponent(this.sha)}`);   // tslint:disable-line: max-line-length
   if (response === null)
     return null;
   return new GitCommitClass(this.repository, response.data);

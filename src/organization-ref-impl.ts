@@ -10,7 +10,7 @@ import { Repository } from "./interfaces/repository";
 OrganizationRefClass.prototype.loadAsync = async function (this: OrganizationRefClass): Promise<Organization | null> {
   if (this instanceof OrganizationClass)
     return this;
-  const response = await this.getAsync<apiTypes.Organization>(`/orgs/${this.login}`);
+  const response = await this.getAsync<apiTypes.Organization>(`/orgs/${encodeURIComponent(this.login)}`);
   if (response === null)
     return null;
   return new OrganizationClass(response.data, this);
@@ -29,7 +29,7 @@ async function loadRepositoriesAsync(
   if (ascending === undefined)
     ascending = sort === "full_name";
   const response = await this.getAllPagesAsync<apiTypes.Repository>(
-    `/orgs/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
+    `/orgs/${encodeURIComponent(this.login)}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
   if (response === null)
     throw new Error("Could not load repositories; organization may not exist");
   return response.map((repository) => new RepositoryClass(repository, this));

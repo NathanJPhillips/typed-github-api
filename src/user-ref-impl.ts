@@ -10,7 +10,7 @@ import { User } from "./interfaces/user";
 UserRefClass.prototype.loadAsync = async function (this: UserRefClass): Promise<User | null> {
   if (this instanceof UserClass)
     return <UserClass>this;
-  const response = await this.getAsync<apiTypes.User>(`/users/${this.login}`);
+  const response = await this.getAsync<apiTypes.User>(`/users/${encodeURIComponent(this.login)}`);
   if (response === null)
     return null;
   return new UserClass(response.data, this);
@@ -29,7 +29,7 @@ async function loadRepositoriesAsync(
   if (ascending === undefined)
     ascending = sort === "full_name";
   const response = await this.getAllPagesAsync<apiTypes.Repository>(
-    `/users/${this.login}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
+    `/users/${encodeURIComponent(this.login)}/repos?type=${type}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
   if (response === null)
     throw new Error("Could not load repositories; user may not exist");
   return response.map((repository) => new RepositoryClass(repository, this));

@@ -6,7 +6,8 @@ import { Issue } from "./interfaces/issue";
 
 
 IssueRefClass.prototype.loadAsync = async function (this: IssueRefClass): Promise<Issue | null> {
-  const response = await this.getAsync<apiTypes.Issue>(`/repos/${this.repository.owner.login}/${this.repository.name}/issues/${this.number}`);
+  const response = await this.getAsync<apiTypes.Issue>(
+    `/repos/${encodeURIComponent(this.repository.owner.login)}/${encodeURIComponent(this.repository.name)}/issues/${this.number}`);
   if (response === null)
     return null;
   return createIssue(response.data, this);

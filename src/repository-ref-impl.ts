@@ -14,7 +14,7 @@ import { Repository } from "./interfaces/repository";
 RepositoryRefClass.prototype.loadAsync = async function (this: RepositoryRefClass): Promise<Repository | null> {
   if (this instanceof RepositoryClass)
     return <RepositoryClass>this;
-  const response = await this.getAsync<apiTypes.Repository>(`/repos/${this.owner.login}/${this.name}`);
+  const response = await this.getAsync<apiTypes.Repository>(`/repos/${encodeURIComponent(this.owner.login)}/${encodeURIComponent(this.name)}`);
   if (response === null)
     return null;
   return new RepositoryClass(response.data, this);
@@ -28,16 +28,16 @@ async function loadCommitsAsync(
   since?: moment.Moment,
   until?: moment.Moment): Promise<CommitSummary[]>
 {
-  let uri = `/repos/${this.owner.login}/${this.name}/commits?`;
-  uri += `sha=${start}`;
+  let uri = `/repos/${encodeURIComponent(this.owner.login)}/${encodeURIComponent(this.name)}/commits?`;
+  uri += `sha=${encodeURIComponent(start)}`;
   if (pathIncluded)
-    uri += `&path=${pathIncluded}`;
+    uri += `&path=${encodeURIComponent(pathIncluded)}`;
   if (author)
-    uri += `&author=${author}`;
+    uri += `&author=${encodeURIComponent(author)}`;
   if (since)
-    uri += `&since=${since}`;
+    uri += `&since=${since.toISOString()}`;
   if (until)
-    uri += `&until=${until}`;
+    uri += `&until=${until.toISOString()}`;
   const response = await this.getAllPagesAsync<apiTypes.CommitSummary>(uri);
   if (response === null)
     throw new Error("Could not load commits; repository may not exist");
@@ -67,18 +67,18 @@ async function loadIssuesAsync(
   ascending: boolean = false,
   updatedSince?: moment.Moment): Promise<Issue[]>
 {
-  let uri = `/repos/${this.owner.login}/${this.name}/issues?`;
+  let uri = `/repos/${encodeURIComponent(this.owner.login)}/${encodeURIComponent(this.name)}/issues?`;
   if (milestone)
     uri += `milestone=${milestone}&`;
   uri += `state=${state}&`;
   if (assignee)
-    uri += `assignee=${assignee}&`;
+    uri += `assignee=${encodeURIComponent(assignee)}&`;
   if (creator)
-    uri += `creator=${creator}&`;
+    uri += `creator=${encodeURIComponent(creator)}&`;
   if (mentioned)
-    uri += `mentioned=${mentioned}&`;
+    uri += `mentioned=${encodeURIComponent(mentioned)}&`;
   if (labels.length !== 0)
-    uri += `labels=${labels.join(",")}&`;
+    uri += `labels=${labels.map(encodeURIComponent).join(",")}&`;
   uri += `sort=${sort}&direction=${ascending ? "asc" : "desc"}`;
   if (updatedSince)
     uri += `&since=${updatedSince.toISOString()}`;

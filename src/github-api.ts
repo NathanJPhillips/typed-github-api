@@ -54,7 +54,9 @@ export class GitHubApi extends GitHubRef {
     ascending: boolean = false,
     updatedSince?: moment.Moment): Promise<Issue[]>
   {
-    let uri = `/issues?filter=${filter}&state=${state}&labels=${labels.join(",")}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`;
+    let uri = "/issues";
+    uri += `?filter=${filter}&state=${state}&labels=${labels.map(encodeURIComponent).join(",")}`;
+    uri += `&sort=${sort}&direction=${ascending ? "asc" : "desc"}`;
     if (updatedSince)
       uri += `&since=${updatedSince.toISOString()}`;
     const response = await this.getAllPagesAsync(uri);
@@ -83,7 +85,7 @@ export class GitHubApi extends GitHubRef {
   {
     uri += `?q=${encodeURIComponent(query)}`;
     if (sort !== "best match")
-      uri += `&sort=${sort}&order=${ascending ? "asc" : "desc"}`;
+      uri += `&sort=${encodeURIComponent(sort)}&order=${ascending ? "asc" : "desc"}`;
     uri += `&per_page=${perPage}`;
     const result = await this.getAllSearchPagesAsync(uri);
     return result.map(mapping);
