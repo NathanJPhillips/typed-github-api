@@ -15,10 +15,10 @@
     "noUnusedParameters": true
   },
   "include": [
-    "src/**/*",
-    "tests/**/*"
+    "src/**/*"
   ],
   "exclude": [
+    "gihub-api-tests/**/*",
     "node_modules/**/*"
   ]
 }

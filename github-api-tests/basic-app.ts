@@ -1,19 +1,19 @@
-//const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 import * as express from "express";
 import * as gitHubApi from "../src/index";
 import GitHubApi from "../src/index";
-//import { RequestWithRawBody } from "../src/index";
+import { RequestWithRawBody } from "../src/index";
 
 const app = express();
 const gitHub = new GitHubApi({ userAgent: "My Client/1.0.0", oAuthToken: process.env.gitHubAccessToken });
 const issueWebHook = new gitHubApi.IssueWebHook(process.env.gitHubWebHookSecret, gitHub);
 
-//// Configure app to let us get the data from a POST
-//app.use(bodyParser.json({
-//  verify: function (req: RequestWithRawBody, _res: express.Response, buf: Uint8Array, _encoding: string) {
-//    req.rawBody = buf;
-//  },
-//}));
+// Configure app to let us get the data from a POST
+app.use(bodyParser.json({
+  verify: function (req: RequestWithRawBody, _res: express.Response, buf: Uint8Array, _encoding: string) {
+    req.rawBody = buf;
+  },
+}));
 
 app.use("/webhooks/github/issue", issueWebHook.router);
 

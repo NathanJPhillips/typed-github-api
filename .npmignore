@@ -20,6 +20,4 @@ src/
 *.js.map
 
 # Don't publish the tests
-tests/
-dist/tests/
 github-api-tests/
