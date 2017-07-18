@@ -6,7 +6,7 @@ import { IssueRefClass } from "./issue-ref";
 import { OrganizationRefClass } from "./organization-ref";
 import { UserRefClass } from "./user-ref";
 
-import { CommitRef } from "./interfaces/commit";
+import { CommitRef, CommitSummary } from "./interfaces/commit";
 import { Issue, IssueRef } from "./interfaces/issue";
 import { OrganizationRef } from "./interfaces/organization";
 import { Repository, RepositoryRef } from "./interfaces/repository";
@@ -32,6 +32,16 @@ export class RepositoryRefClass extends GitHubRef implements RepositoryRef {
   }
 
   public loadAsync(): Promise<Repository | null> {
+    throw new Error("Method not implemented.");
+  }
+
+  public loadCommitsAsync(
+    _start: string = "master",
+    _pathIncluded?: string,
+    _author?: string,
+    _since?: moment.Moment,
+    _until?: moment.Moment): Promise<CommitSummary[]>
+  {
     throw new Error("Method not implemented.");
   }
 

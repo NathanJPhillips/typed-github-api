@@ -42,13 +42,14 @@ export interface GitCommit extends CommitRef {
 }
 
 export interface CommitSummary extends CommitRef {
+  htmlUri: string;
   gitCommit: GitCommitSummary;
   author: UserSummary;
   committer: UserSummary;
   parents: CommitRef[];
 }
 
-export interface Commit extends CommitRef {
+export interface Commit extends CommitSummary {
   changes: GitChanges;
   files: GitFile[];
 }

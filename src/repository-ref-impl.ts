@@ -1,10 +1,12 @@
 import * as moment from "moment";
 
 import * as apiTypes from "./api-types";
+import { CommitSummaryClass } from "./commit";
 import { createIssue } from "./pull-request";
 import { RepositoryClass } from "./repository";
 import { RepositoryRefClass } from "./repository-ref";
 
+import { CommitSummary } from "./interfaces/commit";
 import { Issue } from "./interfaces/issue";
 import { Repository } from "./interfaces/repository";
 
@@ -17,6 +19,31 @@ RepositoryRefClass.prototype.loadAsync = async function (this: RepositoryRefClas
     return null;
   return new RepositoryClass(response.data, this);
 };
+
+async function loadCommitsAsync(
+  this: RepositoryRefClass,
+  start: string = "master",
+  pathIncluded?: string,
+  author?: string,
+  since?: moment.Moment,
+  until?: moment.Moment): Promise<CommitSummary[]>
+{
+  let uri = `/repos/${this.owner.login}/${this.name}/commits?`;
+  uri += `sha=${start}`;
+  if (pathIncluded)
+    uri += `&path=${pathIncluded}`;
+  if (author)
+    uri += `&author=${author}`;
+  if (since)
+    uri += `&since=${since}`;
+  if (until)
+    uri += `&until=${until}`;
+  const response = await this.getAllPagesAsync<apiTypes.CommitSummary>(uri);
+  if (response === null)
+    throw new Error("Could not load commits; repository may not exist");
+  return response.map((commit) => new CommitSummaryClass(this, commit));
+}
+RepositoryRefClass.prototype.loadCommitsAsync = loadCommitsAsync;
 
 function loadIssuesAsync(
   milestone?: number | "*" | "none",

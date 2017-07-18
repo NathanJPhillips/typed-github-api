@@ -39,6 +39,7 @@ export class GitCommitClass extends GitCommitSummaryClass implements GitCommit {
 }
 
 export class CommitSummaryClass extends CommitRefClass implements CommitSummary {
+  public htmlUri: string;
   public gitCommit: GitCommitSummary;
   public author: UserSummary;
   public committer: UserSummary;
@@ -46,6 +47,7 @@ export class CommitSummaryClass extends CommitRefClass implements CommitSummary 
 
   public constructor(repository: RepositoryRefClass, data: apiTypes.CommitSummary) {
     super(repository, data.sha);
+    this.htmlUri = data.html_url;
     this.gitCommit = new GitCommitSummaryClass(repository, data.sha, data.commit);
     this.author = new UserSummaryClass(data.author, this);
     this.committer = new UserSummaryClass(data.committer, this);

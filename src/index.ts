@@ -1,12 +1,13 @@
 import { GitHubApi } from "./github-api";
 
 export { Options } from "./api-fetch";
-export { IssueRef, Issue } from "./interfaces/issue";
-export { Label } from "./interfaces/label";
-export { Milestone } from "./interfaces/milestone";
-export { OrganizationRef, OrganizationSummary, Organization } from "./interfaces/organization";
-export { RepositoryRef, Repository } from "./interfaces/repository";
-export { UserRef, UserSummary, User, MyUser } from "./interfaces/user";
+export * from "./interfaces/commit";
+export * from "./interfaces/issue";
+export * from "./interfaces/label";
+export * from "./interfaces/milestone";
+export * from "./interfaces/organization";
+export * from "./interfaces/repository";
+export * from "./interfaces/user";
 
 export { IssueWebHookData, IssueWebHook } from "./web-hook";
 
