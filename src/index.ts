@@ -13,6 +13,7 @@ export { IssueWebHookData, IssueWebHook } from "./web-hook";
 
 export { RequestWithRawBody } from "./utils/request-with-rawbody";
 
+import "./commit-ref-impl";
 import "./issue-ref-impl";
 import "./repository-ref-impl";
 import "./user-ref-impl";
