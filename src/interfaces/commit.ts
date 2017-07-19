@@ -44,8 +44,8 @@ export interface GitCommit extends CommitRef {
 export interface CommitSummary extends CommitRef {
   htmlUri: string;
   gitCommit: GitCommitSummary;
-  author: UserSummary;
-  committer: UserSummary;
+  author?: UserSummary;
+  committer?: UserSummary;
   parents: CommitRef[];
 }
 
