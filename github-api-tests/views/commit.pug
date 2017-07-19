@@ -1,0 +1,6 @@
+extends layout
+
+block content
+    h1= commit.sha
+    img(src=commit.author.avatarUri class="avatar")
+    div(class="description")= commit.gitCommit.message

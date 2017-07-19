@@ -1,0 +1,6 @@
+extends layout
+
+block content
+  h1= repo.fullName + "#" + issue.number
+  img(src=issue.createdBy.avatarUri class="avatar")
+  div(class="description")= issue.title

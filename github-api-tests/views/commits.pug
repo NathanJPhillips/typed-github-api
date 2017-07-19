@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= repo.fullName
+  img(src=repo.owner.avatarUri class="avatar")
+  h2 Commits
+  p These are the commits from the repository:
+  ul(class="item-list")
+    each commit in commits
+      li
+        img(src=commit.author.avatarUri class="avatar")
+        span
+            a(href=`/repos/${repo.owner.login}/${repo.name}/commits/${commit.sha}`)= commit.sha
+        div(class="description")= commit.gitCommit.message
