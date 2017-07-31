@@ -15,6 +15,7 @@ import { UserSummary } from "./interfaces/user";
 
 
 export class IssueClass extends GitHubRef implements Issue {
+  private repository: Repository;
   private repositoryUri: string;
 
   public number: number;
@@ -47,6 +48,10 @@ export class IssueClass extends GitHubRef implements Issue {
 
   public constructor(data: apiTypes.Issue, options: OptionsOrRef) {
     super(options);
+    if (options instanceof RepositoryClass)
+      this.repository = options;
+    else if (data.repository)
+      this.repository = new RepositoryClass(data.repository, options);
     this.repositoryUri = data.repository_url;
     this.number = data.number;
     this.id = data.id;
@@ -71,10 +76,12 @@ export class IssueClass extends GitHubRef implements Issue {
   }
 
   public loadAsync(): Promise<Issue | null> {
-    throw new Error("Method not implemented.");
+    return Promise.resolve(this);
   }
 
   public async loadRepositoryAsync(): Promise<Repository> {
+    if (this.repository)
+      return this.repository;
     const response = await this.getAsync<apiTypes.Repository>(this.repositoryUri);
     if (response === null)
       throw new Error("Could not load repository for already loaded issue");

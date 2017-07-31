@@ -150,6 +150,7 @@ export interface Milestone {
 export interface Issue {
   url: string;
   repository_url: string;
+  repository?: Repository;
   labels_url: string;
   comments_url: string;
   events_url: string;
