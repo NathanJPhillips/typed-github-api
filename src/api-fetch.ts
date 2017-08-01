@@ -8,6 +8,7 @@ import * as logger from "winston";
 export interface Options {
   userAgent: string;
   oAuthToken?: string;
+  version?: "v3" | "thor-preview";
 }
 
 export interface Response<T> {
@@ -71,7 +72,7 @@ function getUri(uri: string) {
 function getRequestInfo(method: string, options: Options): fetchTypes.RequestInit {
   const headers = new fetchTypes.Headers();
   headers.set("User-Agent", options.userAgent);
-  headers.set("Accept", "application/vnd.github.v3+json");
+  headers.set("Accept", `application/vnd.github.${options.version || "v3"}+json`);
   if (options.oAuthToken)
     headers.set("Authorization", "token " + options.oAuthToken);
   return {

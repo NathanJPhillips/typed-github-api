@@ -6,6 +6,7 @@ export * from "./interfaces/issue";
 export * from "./interfaces/label";
 export * from "./interfaces/milestone";
 export * from "./interfaces/organization";
+export * from "./interfaces/pull-request";
 export * from "./interfaces/repository";
 export * from "./interfaces/user";
 
@@ -15,6 +16,7 @@ export { RequestWithRawBody } from "./utils/request-with-rawbody";
 
 import "./commit-ref-impl";
 import "./issue-ref-impl";
+import "./pull-request-ref-impl";
 import "./repository-ref-impl";
 import "./user-ref-impl";
 

@@ -7,7 +7,7 @@ import { MilestoneClass } from "./milestone";
 import { RepositoryClass } from "./repository";
 import { UserSummaryClass } from "./user";
 
-import { Issue } from "./interfaces/issue";
+import { Issue, IssueComment } from "./interfaces/issue";
 import { Label } from "./interfaces/label";
 import { Milestone } from "./interfaces/milestone";
 import { Repository } from "./interfaces/repository";
@@ -21,6 +21,7 @@ export class IssueClass extends GitHubRef implements Issue {
   public number: number;
 
   public id: number;
+  public isPullRequest: boolean;
   public state: "open" | "closed";
   public title: string;
   public body: string;
@@ -48,13 +49,17 @@ export class IssueClass extends GitHubRef implements Issue {
 
   public constructor(data: apiTypes.Issue, options: OptionsOrRef) {
     super(options);
+
     if (options instanceof RepositoryClass)
       this.repository = options;
     else if (data.repository)
-      this.repository = new RepositoryClass(data.repository, options);
+      this.repository = new RepositoryClass(data.repository, this);
     this.repositoryUri = data.repository_url;
+
     this.number = data.number;
+
     this.id = data.id;
+    this.isPullRequest = data.pull_request !== undefined;
     this.state = data.state;
     this.title = data.title;
     this.body = data.body;
@@ -86,5 +91,24 @@ export class IssueClass extends GitHubRef implements Issue {
     if (response === null)
       throw new Error("Could not load repository for already loaded issue");
     return new RepositoryClass(response.data, this);
+  }
+}
+
+export class IssueCommentClass extends GitHubRef implements IssueComment {
+  public id: number;
+  public htmlUri: string;
+  public body: string;
+  public user: UserSummary;
+  public createdAt: moment.Moment;
+  public updatedAt: moment.Moment;
+
+  constructor(data: apiTypes.IssueComment, options: OptionsOrRef) {
+    super(options);
+    this.id = data.id;
+    this.htmlUri = data.html_url;
+    this.body = data.body;
+    this.user = new UserSummaryClass(data.user, this);
+    this.createdAt = moment(data.created_at);
+    this.updatedAt = moment(data.updated_at);
   }
 }

@@ -3,6 +3,7 @@ import * as moment from "moment";
 import { CommitRef, CommitSummary } from "./commit";
 import { Issue, IssueRef } from "./issue";
 import { OrganizationRef } from "./organization";
+import { PullRequest, PullRequestRef } from "./pull-request";
 import { UserRef, UserSummary } from "./user";
 
 export interface RepositoryRef {
@@ -11,6 +12,7 @@ export interface RepositoryRef {
 
   getCommit(sha: string): CommitRef;
   getIssue(issueNumber: number): IssueRef;
+  getPullRequest(pullRequestNumber: number): PullRequestRef;
 
   loadAsync(): Promise<Repository | null>;
 
@@ -29,6 +31,7 @@ export interface RepositoryRef {
     author?: string,
     since?: moment.Moment,
     until?: moment.Moment): Promise<CommitSummary[]>;
+
   /**
    * @description Loads issues for this repository.
    * @param milestone Only loads issues for this milestone, if specified; specify * to say the issue must be in a milestone and none to say it must not; if a number is passed, it should refer to a milestone by its number field
@@ -52,6 +55,24 @@ export interface RepositoryRef {
     sort?: "created" | "updated" | "comments",
     ascending?: boolean,
     updatedSince?: moment.Moment): Promise<Issue[]>;
+
+  /**
+   * @description Loads pull requests for this repository.
+   * @param state Only loads pull requests for this state (default open)
+   * @param headBranch Only loads pull requests where the head to be merged is from this branch
+   * @param headUsersFork Only loads pull requests where the head to be merged is from this user's fork
+   * @param baseBranch Only loads pull requests where the base to be merged in to is this branch
+   * @param sort The field to sort by (default created)
+   * @param ascending Whether to sort ascending rather than descending (default false unless sorting by created date)
+   * @returns The resulting array of pull requests
+   */
+  loadPullRequestsAsync(
+    state?: "open" | "closed" | "all",
+    headBranch?: string,
+    headUsersFork?: string,
+    baseBranch?: string,
+    sort?: "created" | "updated" | "popularity" | "long-running",
+    ascending?: boolean): Promise<PullRequest[]>;
 }
 
 export interface Repository extends RepositoryRef {

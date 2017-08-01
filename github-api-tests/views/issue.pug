@@ -4,3 +4,6 @@ block content
   h1= repo.fullName + "#" + issue.number
   img(src=issue.createdBy.avatarUri class="avatar")
   div(class="description")= issue.title
+  if (issue.isPullRequest)
+    p
+      a(href=`/repos/${repo.owner.login}/${repo.name}/pull-requests/${issue.number}`) view pull request

@@ -2,12 +2,14 @@ import * as moment from "moment";
 
 import * as apiTypes from "./api-types";
 import { CommitSummaryClass } from "./commit";
-import { createIssue } from "./pull-request";
+import { IssueClass } from "./issue";
+import { PullRequestClass } from "./pull-request";
 import { RepositoryClass } from "./repository";
 import { RepositoryRefClass } from "./repository-ref";
 
 import { CommitSummary } from "./interfaces/commit";
 import { Issue } from "./interfaces/issue";
+import { PullRequest } from "./interfaces/pull-request";
 import { Repository } from "./interfaces/repository";
 
 
@@ -85,6 +87,38 @@ async function loadIssuesAsync(
   const response = await this.getAllPagesAsync<apiTypes.Issue>(uri);
   if (response === null)
     throw new Error("Could not load issues; repository may not exist");
-  return response.map((issue) => createIssue(issue, this));
+  return response.map((issue) => new IssueClass(issue, this));
 }
 RepositoryRefClass.prototype.loadIssuesAsync = loadIssuesAsync;
+
+function loadPullRequestsAsync(
+  state?: "open" | "closed" | "all",
+  headBranch?: string,
+  headUsersFork?: string,
+  baseBranch?: string,
+  sort?: "created" | "updated" | "popularity" | "long-running",
+  ascending?: boolean): Promise<PullRequest[]>;
+async function loadPullRequestsAsync(
+  this: RepositoryRefClass,
+  state: "open" | "closed" | "all" = "open",
+  headBranch?: string,
+  headUsersFork?: string,
+  baseBranch?: string,
+  sort: "created" | "updated" | "popularity" | "long-running" = "created",
+  ascending?: boolean): Promise<PullRequest[]>
+{
+  let uri = `/repos/${encodeURIComponent(this.owner.login)}/${encodeURIComponent(this.name)}/pulls?`;
+  uri += `state=${state}&`;
+  if (headBranch)
+    uri += `head=${headUsersFork ? encodeURIComponent(headUsersFork) : ""}:${encodeURIComponent(headBranch)}&`;
+  if (baseBranch)
+    uri += `base=${encodeURIComponent(baseBranch)}&`;
+  if (ascending === undefined)
+    ascending = sort !== "created";
+  uri += `sort=${sort}&direction=${ascending ? "asc" : "desc"}`;
+  const response = await this.getAllPagesAsync<apiTypes.PullRequest>(uri);
+  if (response === null)
+    throw new Error("Could not load pull requests; repository may not exist");
+  return response.map((pullRequest) => new PullRequestClass(pullRequest, this));
+}
+RepositoryRefClass.prototype.loadPullRequestsAsync = loadPullRequestsAsync;

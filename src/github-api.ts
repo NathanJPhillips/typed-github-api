@@ -2,8 +2,8 @@ import * as moment from "moment";
 
 import * as apiTypes from "./api-types";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
+import { IssueClass } from "./issue";
 import { OrganizationRefClass } from "./organization-ref";
-import { createIssue } from "./pull-request";
 import { RepositoryClass } from "./repository";
 import { UserRefClass } from "./user-ref";
 
@@ -168,5 +168,5 @@ export class GitHubApi extends GitHubRef {
   }
 
   private getRepository(repository: apiTypes.Repository) { return new RepositoryClass(repository, this); }
-  private getIssue(issue: apiTypes.Issue) { return createIssue(issue, this); }
+  private getIssue(issue: apiTypes.Issue) { return new IssueClass(issue, this); }
 }

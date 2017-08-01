@@ -16,6 +16,7 @@ export interface Issue extends IssueRef {
   number: number;
 
   id: number;
+  isPullRequest: boolean;
   state: "open" | "closed";
   title: string;
   body: string;
@@ -38,4 +39,13 @@ export interface Issue extends IssueRef {
   wasOpen(when: moment.Moment): boolean;
 
   locked: boolean;
+}
+
+export interface IssueComment {
+  id: number;
+  htmlUri: string;
+  body: string;
+  user: UserSummary;
+  createdAt: moment.Moment;
+  updatedAt: moment.Moment;
 }

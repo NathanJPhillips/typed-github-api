@@ -1,14 +1,14 @@
 import * as moment from "moment";
 
 import * as apiTypes from "./api-types";
-import { OptionsOrRef } from "./github-ref";
+import { GitHubRef, OptionsOrRef } from "./github-ref";
 import { UserSummaryClass } from "./user";
 
 import { Milestone } from "./interfaces/milestone";
 import { UserSummary } from "./interfaces/user";
 
 
-export class MilestoneClass implements Milestone {
+export class MilestoneClass extends GitHubRef implements Milestone {
   public id: number;
   public number: number;
   public title: string;
@@ -23,11 +23,12 @@ export class MilestoneClass implements Milestone {
   public closed?: moment.Moment;
 
   public constructor(data: apiTypes.Milestone, options: OptionsOrRef) {
+    super(options);
     this.id = data.id;
     this.number = data.number;
     this.title = data.title;
     this.description = data.description;
-    this.creator = new UserSummaryClass(data.creator, options);
+    this.creator = new UserSummaryClass(data.creator, this);
     this.openIssueCount = data.open_issues;
     this.closedIssueCount = data.closed_issues;
     this.state = data.state;

@@ -104,4 +104,46 @@ router.get("/repos/:owner/:repo/issues/:number", async (req: express.Request, re
   }
 });
 
+router.get("/repos/:owner/:repo/pull-requests", async (req: express.Request, res: express.Response) => {
+  try {
+    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo);
+    const pullRequests = await repo.loadPullRequestsAsync("all");
+    const repository = pullRequests.length !== 0 ? pullRequests[0].base.repository : await repo.loadAsync();
+    if (repository === null)
+      throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
+    res.render("pull-requests", { title: `Pull Requests - ${repository.fullName} - Repositories`, repo: repository, pullRequests: pullRequests });
+  } catch (err) {
+    res.status(err.status || HttpStatusCodes.InternalServerError);
+    res.render("error", {
+      message: err.message,
+      error: err,
+    });
+  }
+});
+
+router.get("/repos/:owner/:repo/pull-requests/:number", async (req: express.Request, res: express.Response) => {
+  try {
+    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo);
+    const pullRequest = await repo.getPullRequest(req.params.number).loadAsync();
+    if (pullRequest === null)
+      throw { status: HttpStatusCodes.NotFound, message: "Pull Request not found" };
+    const repository = pullRequest.base.repository;
+    res.render("pull-request",
+      {
+        title: `#${pullRequest.number} - Pull Requests - ${repository.fullName} - Repositories`,
+        repo: repository,
+        pullRequest: pullRequest,
+        reviews: await pullRequest.loadReviewsAsync(),
+        reviewRequests: await pullRequest.loadReviewRequestsAsync(),
+        reviewRequestsWithTeams: await pullRequest.loadReviewRequestsIncludingTeamsPreviewAsync(),
+      });
+  } catch (err) {
+    res.status(err.status || HttpStatusCodes.InternalServerError);
+    res.render("error", {
+      message: err.message,
+      error: err,
+    });
+  }
+});
+
 export default router;

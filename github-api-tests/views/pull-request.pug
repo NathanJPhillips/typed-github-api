@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h1= repo.fullName + "#" + pullRequest.number
+  h2= pullRequest.title
+  div Merging #[span #{pullRequest.head.repository.fullName}/#{pullRequest.head.name}] into #[span #{pullRequest.base.repository.fullName}/#{pullRequest.base.name}]
+  dt Created by
+  dd #[span= pullRequest.createdBy.login] #[img(src=pullRequest.createdBy.avatarUri class="avatar")] at #[span= pullRequest.createdAt.toISOString()]
+  div= pullRequest.body
+  dt State
+  dd= pullRequest.state
+  dt Assignees
+  dd
+    each assignee in pullRequest.assignees
+      div #[span= assignee.login] #[img(src=assignee.avatarUri class="avatar")]
+  dt Review Requests
+  dd
+    each review in reviewRequests
+      div #[span= review.login] #[img(src=review.avatarUri class="avatar")]
+  dt Review Requests - Users
+  dd
+    each review in reviewRequestsWithTeams.users
+      div #[span= review.login] #[img(src=review.avatarUri class="avatar")]
+  dt Review Requests - Teams
+  dd
+    each review in reviewRequestsWithTeams.teams
+      div #[span= review.name] #[span= review.description]
+  dt Reviews
+  dd
+    each review in reviews
+      div #[span= review.user.login] #[img(src=review.user.avatarUri class="avatar")]: #[span= review.state]

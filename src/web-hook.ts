@@ -8,7 +8,7 @@ import { RequestWithRawBody } from "./utils/request-with-rawbody";
 
 import * as apiTypes from "./api-types";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
-import { createIssue } from "./pull-request";
+import { IssueClass } from "./issue";
 import { UserSummaryClass } from "./user";
 
 import { Issue } from "./interfaces/issue";
@@ -117,7 +117,7 @@ export class IssueWebHook extends WebHook<IssueWebHookData, apiTypes.IssueWebHoo
       event: request.event,
       sender: request.sender,
       action: data.action,
-      issue: createIssue(data.issue, this),
+      issue: new IssueClass(data.issue, this),
     };
   }
 }

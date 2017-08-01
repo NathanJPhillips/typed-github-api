@@ -16,6 +16,12 @@ export class GitHubRef {
     return fetch.getAsync<T>(uri, this.options);
   }
 
+  public getPreviewAsync<T>(uri: string) {
+    const previewOptions = Object.assign({}, this.options);
+    previewOptions.version = "thor-preview";
+    return fetch.getAsync<T>(uri, previewOptions);
+  }
+
   public getAllPagesAsync<T>(uri: string) {
     return fetch.getAllPagesAsync<T>(uri, this.options);
   }

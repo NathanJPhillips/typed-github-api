@@ -171,14 +171,97 @@ export interface Issue {
   closed_at: Date | null;
   body: string;
   closed_by: User | null;
-  pull_request?: PullRequest;
+  pull_request?: PullRequestExtension;
 }
 
-export interface PullRequest {
+export interface PullRequestExtension {
   url: string;
   html_url: string;
   diff_url: string;
   patch_url: string;
+}
+
+export interface IssueComment {
+  id: number;
+  url: string;
+  html_url: string;
+  body: string;
+  user: UserSummary;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface PullRequest {
+  url: string;
+  comments_url: string;
+  html_url: string;
+  id: number;
+  number: number;
+  title: string;
+  user: UserSummary;
+  state: "open" | "closed";
+  locked: boolean;
+  assignee: UserSummary | null;
+  assignees: UserSummary[];
+  milestone: Milestone | null;
+  created_at: Date;
+  updated_at: Date;
+  closed_at: Date | null;
+  body: string;
+  issue_url: string;
+  commits_url: string;
+  review_comments_url: string;
+  review_comment_url: string;
+  statuses_url: string;
+  merged_at: Date | null;
+  head: Branch;
+  base: Branch;
+}
+
+export interface Branch {
+  label: string;
+  ref: string;
+  sha: string;
+  user: UserSummary;
+  repo: Repository;
+}
+
+export interface Review {
+  id: number;
+  user: UserSummary;
+  body: string;
+  commit_id: string;
+  state: string;
+  html_url: string;
+  pull_request_url: string;
+}
+
+export interface ReviewComment extends IssueComment {
+  pull_request_review_id: number;
+  diff_hunk: string;
+  path: string;
+  position: number;
+  original_position: number;
+  commit_id: string;
+  original_commit_id: string;
+  pull_request_url: string;
+}
+
+export interface ReviewRequests {
+  users: UserSummary[];
+  teams: Team[];
+}
+
+export interface Team {
+  id: number;
+  url: string;
+  name: string;
+  slug: string;
+  description: string;
+  privacy: "closed";
+  permission: "admin";
+  members_url: string;
+  repositories_url: string;
 }
 
 export interface Repository {
@@ -291,9 +374,9 @@ export interface GitCommitSummary {
 }
 
 export interface GitCommit extends GitCommitSummary {
-  "sha": string;
-  "html_url": string;
-  "parents": CommitRef[];
+  sha: string;
+  html_url: string;
+  parents: CommitRef[];
 }
 
 export interface CommitSummary {

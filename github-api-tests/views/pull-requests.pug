@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= repo.fullName
+  img(src=repo.owner.avatarUri class="avatar")
+  h2 Pull Requests
+  p These are the pull requests from the repository:
+  ul(class="item-list")
+    each pullRequest in pullRequests
+      li
+        img(src=pullRequest.createdBy.avatarUri class="avatar")
+        span
+            a(href=`/repos/${repo.owner.login}/${repo.name}/pull-requests/${pullRequest.number}`)= "#" + pullRequest.number
+        div(class="description")= pullRequest.title
