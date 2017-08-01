@@ -7,7 +7,7 @@
     "WebHook",
     "API"
   ],
-  "version": "1.1.25",
+  "version": "1.1.26",
   "author": "Nathan Phillips",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

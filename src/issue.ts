@@ -98,7 +98,7 @@ export class IssueCommentClass extends GitHubRef implements IssueComment {
   public id: number;
   public htmlUri: string;
   public body: string;
-  public user: UserSummary;
+  public createdBy: UserSummary;
   public createdAt: moment.Moment;
   public updatedAt: moment.Moment;
 
@@ -107,7 +107,7 @@ export class IssueCommentClass extends GitHubRef implements IssueComment {
     this.id = data.id;
     this.htmlUri = data.html_url;
     this.body = data.body;
-    this.user = new UserSummaryClass(data.user, this);
+    this.createdBy = new UserSummaryClass(data.user, this);
     this.createdAt = moment(data.created_at);
     this.updatedAt = moment(data.updated_at);
   }

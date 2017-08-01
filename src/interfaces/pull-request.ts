@@ -49,7 +49,7 @@ export interface BranchWithRepo extends Branch {
 
 export interface Review {
   id: number;
-  user: UserSummary;
+  createdBy: UserSummary;
   body: string;
   commitSha: string;
   state: string;

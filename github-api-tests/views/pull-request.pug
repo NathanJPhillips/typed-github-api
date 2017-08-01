@@ -28,4 +28,4 @@ block content
   dt Reviews
   dd
     each review in reviews
-      div #[span= review.user.login] #[img(src=review.user.avatarUri class="avatar")]: #[span= review.state]
+      div #[span= review.createdBy.login] #[img(src=review.createdBy.avatarUri class="avatar")]: #[span= review.state]

@@ -45,7 +45,7 @@ export interface IssueComment {
   id: number;
   htmlUri: string;
   body: string;
-  user: UserSummary;
+  createdBy: UserSummary;
   createdAt: moment.Moment;
   updatedAt: moment.Moment;
 }

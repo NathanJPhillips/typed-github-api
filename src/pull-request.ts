@@ -125,7 +125,7 @@ export class PullRequestClass extends GitHubRef implements PullRequest {
 
 export class ReviewClass extends GitHubRef implements Review {
   public id: number;
-  public user: UserSummary;
+  public createdBy: UserSummary;
   public body: string;
   public commitSha: string;
   public state: string;
@@ -134,7 +134,7 @@ export class ReviewClass extends GitHubRef implements Review {
   constructor(data: apiTypes.Review, options: OptionsOrRef) {
     super(options);
     this.id = data.id;
-    this.user = new UserSummaryClass(data.user, this);
+    this.createdBy = new UserSummaryClass(data.user, this);
     this.body = data.body;
     this.commitSha = data.commit_id;
     this.state = data.state;
