@@ -1,7 +1,7 @@
 {
   "name": "github-api-tests",
   "description": "Tests for typed-github-api",
-  "version": "1.1.26",
+  "version": "1.1.27",
   "author": "Nathan Phillips",
   "private": true,
   "main": "app.js",
@@ -16,7 +16,7 @@
     "body-parser": "^1.17.2",
     "express": "^4.14.0",
     "pug": "^2.0.0-beta6",
-    "typed-github-api": "^1.1.26",
+    "typed-github-api": "^1.1.27",
     "winston": "^2.3.1"
   },
   "devDependencies": {

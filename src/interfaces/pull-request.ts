@@ -52,7 +52,7 @@ export interface Review {
   createdBy: UserSummary;
   body: string;
   commitSha: string;
-  state: string;
+  state: "APPROVED" | "CHANGES_REQUESTED" | "COMMENTED" | "DISMISSED";
   htmlUri: string;
 }
 

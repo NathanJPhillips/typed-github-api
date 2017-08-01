@@ -231,7 +231,7 @@ export interface Review {
   user: UserSummary;
   body: string;
   commit_id: string;
-  state: string;
+  state: "APPROVED" | "CHANGES_REQUESTED" | "COMMENTED" | "DISMISSED";
   html_url: string;
   pull_request_url: string;
 }

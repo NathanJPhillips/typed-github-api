@@ -128,7 +128,7 @@ export class ReviewClass extends GitHubRef implements Review {
   public createdBy: UserSummary;
   public body: string;
   public commitSha: string;
-  public state: string;
+  public state: "APPROVED" | "CHANGES_REQUESTED" | "COMMENTED" | "DISMISSED";
   public htmlUri: string;
 
   constructor(data: apiTypes.Review, options: OptionsOrRef) {
