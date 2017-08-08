@@ -4,7 +4,7 @@ import * as apiTypes from "./api-types";
 import { OptionsOrRef } from "./github-ref";
 import { OrganizationRefClass } from "./organization-ref";
 
-import { Organization, OrganizationSummary, MyOrganization } from "./interfaces/organization";
+import { MyOrganization, Organization, OrganizationSummary } from "./interfaces/organization";
 
 export class OrganizationSummaryClass extends OrganizationRefClass implements OrganizationSummary {
   public id: number;
