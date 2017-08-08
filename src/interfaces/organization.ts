@@ -1,3 +1,5 @@
+import * as moment from "moment";
+
 import { Repository, RepositoryRef } from "./repository";
 
 export interface OrganizationRef {
@@ -21,7 +23,41 @@ export interface OrganizationRef {
 }
 
 export interface OrganizationSummary extends OrganizationRef {
+  id: number;
+  avatarUri: string;
+  description: string;
 }
 
 export interface Organization extends OrganizationSummary {
+  name: string;
+  company: string;
+  blog: string;
+  location: string;
+  email: string;
+  publicRepos: number;
+  publicGists: number;
+  followers: number;
+  following: number;
+  createdAt: moment.Moment;
+  updatedAt: moment.Moment;
+  htmlUri: string;
+  hasOrganizationProjects: boolean;
+  hasRepositoryProjects: boolean;
+}
+
+export interface MyOrganization {
+  privateReposTotal: number;
+  privateReposOwned: number;
+  privateGists: number;
+  diskUsage: number;
+  collaborators: number;
+  plan: {
+    name: string;
+    space: number;
+    privateRepos: number;
+    collaborators: number;
+  };
+  billingEmail: string;
+  defaultRepositorySettings: string;
+  membersCanCreateRepositories: boolean;
 }

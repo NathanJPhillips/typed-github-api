@@ -42,13 +42,20 @@ export interface UserOrOrg extends UserOrOrgSummary {
   followers: number;
   following: number;
   created_at: Date;
+  updated_at: Date;
 }
 
 export interface User extends UserSummary, UserOrOrg {
   type: "User";
   hireable: boolean;
   bio: string;
-  updated_at: Date;
+}
+
+export interface Organization extends OrganizationSummary, UserOrOrg {
+  type: "Organization";
+  html_url: string;
+  has_organization_projects: boolean;
+  has_repository_projects: boolean;
 }
 
 export interface PrivateUserOrOrg extends UserOrOrg {
@@ -70,14 +77,11 @@ export interface PrivateUser extends User, PrivateUserOrOrg {
   two_factor_authentication: boolean;
 }
 
-export interface Organization extends OrganizationSummary, PrivateUserOrOrg {
+export interface PrivateOrganization extends Organization, PrivateUserOrOrg {
   type: "Organization";
-  html_url: string;
   billing_email: string;
   default_repository_settings: string;
   members_can_create_repositories: boolean;
-  has_organization_projects: boolean;
-  has_repository_projects: boolean;
 }
 
 export interface Event {

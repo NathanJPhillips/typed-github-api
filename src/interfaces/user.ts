@@ -37,9 +37,21 @@ export interface User extends UserSummary {
   publicGists: number;
   followers: number;
   following: number;
-  created: moment.Moment;
+  createdAt: moment.Moment;
+  updatedAt: moment.Moment;
 }
 
 export interface MyUser extends User {
+  privateReposTotal: number;
+  privateReposOwned: number;
+  privateGists: number;
+  diskUsage: number;
+  collaborators: number;
+  plan: {
+    name: string;
+    space: number;
+    privateRepos: number;
+    collaborators: number;
+  };
   twoFactorAuthentication: boolean;
 }

@@ -9,7 +9,7 @@ import { Repository } from "./interfaces/repository";
 
 OrganizationRefClass.prototype.loadAsync = async function (this: OrganizationRefClass): Promise<Organization | null> {
   if (this instanceof OrganizationClass)
-    return this;
+    return <OrganizationClass>this;
   const response = await this.getAsync<apiTypes.Organization>(`/orgs/${encodeURIComponent(this.login)}`);
   if (response === null)
     return null;
