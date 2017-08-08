@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1= repo.fullName + "#" + pullRequest.number
+  h1 #{repo.fullName}##[a(href=pullRequest.htmlUri, target="_blank") #{pullRequest.number}]
   h2= pullRequest.title
   div Merging #[span #{pullRequest.head.repository.fullName}/#{pullRequest.head.name}] into #[span #{pullRequest.base.repository.fullName}/#{pullRequest.base.name}]
   dt Created by
