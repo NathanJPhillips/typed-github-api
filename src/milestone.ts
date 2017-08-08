@@ -13,6 +13,7 @@ export class MilestoneClass extends GitHubRef implements Milestone {
   public number: number;
   public title: string;
   public description: string;
+  public htmlUri: string;
   public creator: UserSummary;
   public openIssueCount: number;
   public closedIssueCount: number;
@@ -26,6 +27,7 @@ export class MilestoneClass extends GitHubRef implements Milestone {
     super(options);
     this.id = data.id;
     this.number = data.number;
+    this.htmlUri = data.html_url;
     this.title = data.title;
     this.description = data.description;
     this.creator = new UserSummaryClass(data.creator, this);

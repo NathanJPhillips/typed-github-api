@@ -15,6 +15,7 @@ export interface PullRequest extends PullRequestRef {
   id: number;
   number: number;
   title: string;
+  htmlUri: string;
   createdBy: UserSummary;
   state: "open" | "closed";
   locked: boolean;

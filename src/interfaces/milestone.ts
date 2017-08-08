@@ -7,6 +7,7 @@ export interface Milestone {
   number: number;
   title: string;
   description: string;
+  htmlUri: string;
   creator: UserSummary;
   openIssueCount: number;
   closedIssueCount: number;

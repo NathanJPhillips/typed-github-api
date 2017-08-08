@@ -20,8 +20,8 @@ export class PullRequestClass extends GitHubRef implements PullRequest {
   public number: number;
 
   public id: number;
-  public htmlUri: string;
   public title: string;
+  public htmlUri: string;
   public createdBy: UserSummary;
   public state: "open" | "closed";
   public locked: boolean;
@@ -45,8 +45,8 @@ export class PullRequestClass extends GitHubRef implements PullRequest {
     this.number = data.number;
 
     this.id = data.id;
-    this.htmlUri = data.html_url;
     this.title = data.title;
+    this.htmlUri = data.html_url;
     this.createdBy = new UserSummaryClass(data.user, this);
     this.state = data.state;
     this.locked = data.locked;
