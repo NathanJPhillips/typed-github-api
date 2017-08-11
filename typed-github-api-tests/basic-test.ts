@@ -1,8 +1,7 @@
 const bodyParser = require("body-parser");
 import * as express from "express";
-import * as gitHubApi from "../src/index";
-import GitHubApi from "../src/index";
-import { RequestWithRawBody } from "../src/index";
+import * as gitHubApi from "typed-github-api";
+import GitHubApi, { RequestWithRawBody } from "typed-github-api";
 
 const app = express();
 const gitHub = new GitHubApi({ userAgent: "My Client/1.0.0", oAuthToken: process.env.gitHubAccessToken });
