@@ -1,4 +1,4 @@
-import { Branch } from "./branch";
+import { BranchSummary } from "./branch";
 import { IssueComment } from "./issue";
 import { Milestone } from "./milestone";
 import { Team } from "./team";
@@ -27,8 +27,8 @@ export interface PullRequest {
   review_comment_url: string;
   statuses_url: string;
   merged_at: Date | null;
-  head: Branch;
-  base: Branch;
+  head: BranchSummary;
+  base: BranchSummary;
 }
 
 export interface Review {

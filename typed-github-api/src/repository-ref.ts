@@ -1,5 +1,6 @@
 import * as moment from "moment";
 
+import { BranchRefClass } from "./branch-ref";
 import { CommitRefClass } from "./commit-ref";
 import { GitHubRef } from "./github-ref";
 import { IssueRefClass } from "./issue-ref";
@@ -7,6 +8,7 @@ import { OrganizationRefClass } from "./organization-ref";
 import { PullRequestRefClass } from "./pull-request-ref";
 import { UserRefClass } from "./user-ref";
 
+import { BranchRef } from "./interfaces/branch";
 import { CommitRef, CommitSummary } from "./interfaces/commit";
 import { Issue, IssueRef } from "./interfaces/issue";
 import { OrganizationRef } from "./interfaces/organization";
@@ -25,6 +27,10 @@ export class RepositoryRefClass extends GitHubRef implements RepositoryRef {
     this.name = name;
   }
 
+  public getBranch(name: string): BranchRef {
+    return new BranchRefClass(this, name);
+  }
+
   public getCommit(sha: string): CommitRef {
     return new CommitRefClass(this, sha);
   }
@@ -38,6 +44,10 @@ export class RepositoryRefClass extends GitHubRef implements RepositoryRef {
   }
 
   public loadAsync(): Promise<Repository | null> {
+    throw new Error("Method not implemented.");
+  }
+
+  public loadBranchesAsync(_protectedOnly: boolean = false): Promise<BranchRef[]> {
     throw new Error("Method not implemented.");
   }
 

@@ -1,5 +1,6 @@
 import * as moment from "moment";
 
+import { BranchRef } from "./branch";
 import { CommitRef, CommitSummary } from "./commit";
 import { Issue, IssueRef } from "./issue";
 import { OrganizationRef } from "./organization";
@@ -10,11 +11,19 @@ export interface RepositoryRef {
   readonly owner: UserRef | OrganizationRef;
   readonly name: string;
 
+  getBranch(name: string): BranchRef;
   getCommit(sha: string): CommitRef;
   getIssue(issueNumber: number): IssueRef;
   getPullRequest(pullRequestNumber: number): PullRequestRef;
 
   loadAsync(): Promise<Repository | null>;
+
+  /**
+   * Loads branches from this repository.
+   * @param protectedOnly Only loads protected branches
+   * @returns             The resulting array of branches
+   */
+  loadBranchesAsync(protectedOnly?: boolean): Promise<BranchRef[]>;
 
   /**
    * @description Loads commits from this repository.

@@ -36,6 +36,40 @@ router.get("/repos/:owner/:repo", async (req: express.Request, res: express.Resp
   }
 });
 
+router.get("/repos/:owner/:repo/branches", async (req: express.Request, res: express.Response) => {
+  try {
+    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo).loadAsync();
+    if (repo === null)
+      throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
+    const branches = await repo.loadBranchesAsync();
+    res.render("branches", { title: `Branches - ${repo.fullName} - Repositories`, repo: repo, branches: branches });
+  } catch (err) {
+    res.status(err.status || HttpStatusCodes.InternalServerError);
+    res.render("error", {
+      message: err.message,
+      error: err,
+    });
+  }
+});
+
+router.get("/repos/:owner/:repo/branches/:name", async (req: express.Request, res: express.Response) => {
+  try {
+    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo).loadAsync();
+    if (repo === null)
+      throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
+    const branch = await repo.getBranch(req.params.name).loadAsync();
+    if (branch === null)
+      throw { status: HttpStatusCodes.NotFound, message: "Branch not found" };
+    res.render("branch", { title: `${branch.name} - Branches - ${repo.fullName} - Repositories`, repo: repo, branch: branch });
+  } catch (err) {
+    res.status(err.status || HttpStatusCodes.InternalServerError);
+    res.render("error", {
+      message: err.message,
+      error: err,
+    });
+  }
+});
+
 router.get("/repos/:owner/:repo/commits", async (req: express.Request, res: express.Response) => {
   try {
     const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo).loadAsync();

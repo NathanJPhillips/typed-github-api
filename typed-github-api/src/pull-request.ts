@@ -7,9 +7,10 @@ import { MilestoneClass } from "./milestone";
 import { RepositoryClass } from "./repository";
 import { UserSummaryClass } from "./user";
 
+import { BranchSummary, BranchSummaryWithRepository } from "./interfaces/branch";
 import { Issue } from "./interfaces/issue";
 import { Milestone } from "./interfaces/milestone";
-import { Branch, BranchWithRepo, PullRequest, Review, ReviewComment, ReviewRequests, Team } from "./interfaces/pull-request";
+import { PullRequest, Review, ReviewComment, ReviewRequests, Team } from "./interfaces/pull-request";
 import { UserSummary } from "./interfaces/user";
 
 
@@ -33,8 +34,8 @@ export class PullRequestClass extends GitHubRef implements PullRequest {
   public mergedAt?: moment.Moment;
   public closedAt?: moment.Moment;
   public body: string;
-  public head: Branch;
-  public base: BranchWithRepo;
+  public head: BranchSummary;
+  public base: BranchSummaryWithRepository;
 
   public constructor(data: apiTypes.PullRequest, options: OptionsOrRef) {
     super(options);
@@ -63,7 +64,7 @@ export class PullRequestClass extends GitHubRef implements PullRequest {
       this.closedAt = moment(data.closed_at);
     this.body = data.body;
 
-    function loadBranch(data: apiTypes.Branch): Branch {
+    function loadBranchSummary(data: apiTypes.BranchSummary): BranchSummary {
       return {
         name: data.ref,
         sha: data.sha,
@@ -71,10 +72,10 @@ export class PullRequestClass extends GitHubRef implements PullRequest {
         repository: data.repo ? new RepositoryClass(data.repo, options) : undefined,
       };
     }
-    this.head = loadBranch(data.head);
+    this.head = loadBranchSummary(data.head);
     if (!data.base.repo)
       throw new Error("no base repo");
-    this.base = <BranchWithRepo>loadBranch(data.base);
+    this.base = <BranchSummaryWithRepository>loadBranchSummary(data.base);
   }
 
   public loadAsync(): Promise<PullRequest | null> {

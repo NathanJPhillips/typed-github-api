@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= repo.fullName
+  img(src=repo.owner.avatarUri class="avatar")
+  h2 Branches
+  p These are the branches from the repository:
+  ul(class="item-list")
+    each branch in branches
+      li
+        a(href=`/repos/${repo.owner.login}/${repo.name}/branches/${branch.name}`)= branch.name

@@ -1,12 +1,14 @@
 import * as moment from "moment";
 
 import * as apiTypes from "./api-interfaces";
+import { BranchRefClass } from "./branch-ref";
 import { CommitSummaryClass } from "./commit";
 import { IssueClass } from "./issue";
 import { PullRequestClass } from "./pull-request";
 import { RepositoryClass } from "./repository";
 import { RepositoryRefClass } from "./repository-ref";
 
+import { BranchRef } from "./interfaces/branch";
 import { CommitSummary } from "./interfaces/commit";
 import { Issue } from "./interfaces/issue";
 import { PullRequest } from "./interfaces/pull-request";
@@ -21,6 +23,19 @@ RepositoryRefClass.prototype.loadAsync = async function (this: RepositoryRefClas
     return null;
   return new RepositoryClass(response.data, this);
 };
+
+async function loadBranchesAsync(
+  this: RepositoryRefClass,
+  protectedOnly: boolean = false): Promise<BranchRef[]>
+{
+  let uri = `/repos/${encodeURIComponent(this.owner.login)}/${encodeURIComponent(this.name)}/branches?`;
+  uri += `protected=${protectedOnly}`;
+  const response = await this.getAllPagesAsync<apiTypes.BranchRef>(uri);
+  if (response === null)
+    throw new Error("Could not load branches; repository may not exist");
+  return response.map((branch) => new BranchRefClass(this, branch.name));
+}
+RepositoryRefClass.prototype.loadBranchesAsync = loadBranchesAsync;
 
 async function loadCommitsAsync(
   this: RepositoryRefClass,

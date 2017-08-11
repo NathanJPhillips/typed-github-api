@@ -14,6 +14,7 @@ export { IssueWebHookData, IssueWebHook } from "./web-hook";
 
 export { RequestWithRawBody } from "./utils/request-with-rawbody";
 
+import "./branch-ref-impl";
 import "./commit-ref-impl";
 import "./issue-ref-impl";
 import "./pull-request-ref-impl";
