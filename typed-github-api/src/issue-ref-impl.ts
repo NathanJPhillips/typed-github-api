@@ -1,4 +1,4 @@
-import * as apiTypes from "./api-types";
+import * as apiTypes from "./api-interfaces";
 import { IssueClass } from "./issue";
 import { IssueRefClass } from "./issue-ref";
 

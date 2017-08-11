@@ -1,4 +1,4 @@
-import * as apiTypes from "./api-types";
+import * as apiTypes from "./api-interfaces";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
 
 import { Label } from "./interfaces/label";

@@ -1,4 +1,4 @@
-import * as apiTypes from "./api-types";
+import * as apiTypes from "./api-interfaces";
 import { RepositoryClass } from "./repository";
 import { UserClass } from "./user";
 import { UserRefClass } from "./user-ref";

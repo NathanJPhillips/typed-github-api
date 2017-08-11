@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import * as apiTypes from "./api-types";
+import * as apiTypes from "./api-interfaces";
 import { CommitSummaryClass } from "./commit";
 import { IssueClass } from "./issue";
 import { PullRequestClass } from "./pull-request";

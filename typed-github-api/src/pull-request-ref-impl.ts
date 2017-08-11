@@ -1,4 +1,4 @@
-import * as apiTypes from "./api-types";
+import * as apiTypes from "./api-interfaces";
 import { PullRequestClass } from "./pull-request";
 import { PullRequestRefClass } from "./pull-request-ref";
 

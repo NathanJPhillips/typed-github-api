@@ -6,7 +6,7 @@ import * as logger from "winston";
 
 import { RequestWithRawBody } from "./utils/request-with-rawbody";
 
-import * as apiTypes from "./api-types";
+import * as apiTypes from "./api-interfaces";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
 import { IssueClass } from "./issue";
 import { UserSummaryClass } from "./user";

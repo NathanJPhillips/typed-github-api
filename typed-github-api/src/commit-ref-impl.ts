@@ -1,4 +1,4 @@
-import * as apiTypes from "./api-types";
+import * as apiTypes from "./api-interfaces";
 import { CommitClass, GitCommitClass } from "./commit";
 import { CommitRefClass } from "./commit-ref";
 

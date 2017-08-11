@@ -1,4 +1,4 @@
-import * as apiTypes from "./api-types";
+import * as apiTypes from "./api-interfaces";
 import { OrganizationClass } from "./organization";
 import { OrganizationRefClass } from "./organization-ref";
 import { RepositoryClass } from "./repository";

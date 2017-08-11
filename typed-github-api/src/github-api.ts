@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import * as apiTypes from "./api-types";
+import * as apiTypes from "./api-interfaces";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
 import { IssueClass } from "./issue";
 import { OrganizationRefClass } from "./organization-ref";
