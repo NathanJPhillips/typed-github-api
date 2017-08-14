@@ -37,7 +37,7 @@ export interface GitCommitSummary extends CommitRef {
   message: string;
 }
 
-export interface GitCommit extends CommitRef {
+export interface GitCommit extends GitCommitSummary {
   parents: CommitRef[];
 }
 
