@@ -10,11 +10,11 @@ export interface OrganizationRef {
   loadAsync(): Promise<Organization | null>;
 
   /**
-   * @description Loads repositories owned by this organisation.
-   * @param type The type of repository to return (default all)
-   * @param sort The field to sort by (default full_name)
+   * Loads repositories owned by this organisation.
+   * @param type      The type of repository to return (default all)
+   * @param sort      The field to sort by (default full_name)
    * @param ascending Whether to sort ascending rather than descending (default false unless sorting by full_name)
-   * @returns The resulting array of repositories
+   * @returns         The resulting array of repositories
    */
   loadRepositoriesAsync(
     type?: "all" | "public" | "private" | "forks" | "sources" | "member",

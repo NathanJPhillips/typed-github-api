@@ -92,12 +92,12 @@ export class GitHubApi extends GitHubRef {
   }
 
   /**
-   * @description Loads repositories matching search query.
-   * @param query The query used for the search
-   * @param sort The field to sort by (default best match)
+   * Loads repositories matching search query.
+   * @param query     The query used for the search
+   * @param sort      The field to sort by (default best match)
    * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
-   * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
-   * @returns An array of repositories that match the query
+   * @param perPage   How many results to return per page (default 100) - pages are concatentated to produce the results array
+   * @returns         An array of repositories that match the query
    */
   public searchRepositoriesAsync(
     query: string,
@@ -109,12 +109,12 @@ export class GitHubApi extends GitHubRef {
   }
 
   /**
-   * @description Loads repositories matching search query with a score as to how well they matched.
-   * @param query The query used for the search
-   * @param sort The field to sort by (default best match)
+   * Loads repositories matching search query with a score as to how well they matched.
+   * @param query     The query used for the search
+   * @param sort      The field to sort by (default best match)
    * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
-   * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
-   * @returns An array of repositories that match the query with a score as to how well they matched
+   * @param perPage   How many results to return per page (default 100) - pages are concatentated to produce the results array
+   * @returns         An array of repositories that match the query with a score as to how well they matched
    */
   public searchRepositoriesWithScoreAsync(
     query: string,
@@ -130,12 +130,12 @@ export class GitHubApi extends GitHubRef {
   }
 
   /**
-   * @description Loads issues matching search query.
-   * @param query The query used for the search
-   * @param sort The field to sort by (default best match)
+   * Loads issues matching search query.
+   * @param query     The query used for the search
+   * @param sort      The field to sort by (default best match)
    * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
-   * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
-   * @returns An array of issues that match the query
+   * @param perPage   How many results to return per page (default 100) - pages are concatentated to produce the results array
+   * @returns         An array of issues that match the query
    */
   public async searchIssuesAsync(
     query: string,
@@ -147,12 +147,12 @@ export class GitHubApi extends GitHubRef {
   }
 
   /**
-   * @description Loads issues matching search query with a score as to how well they matched.
-   * @param query The query used for the search
-   * @param sort The field to sort by (default best match)
+   * Loads issues matching search query with a score as to how well they matched.
+   * @param query     The query used for the search
+   * @param sort      The field to sort by (default best match)
    * @param ascending If a field to sort by is specified, whether to sort ascending rather than descending (default false)
-   * @param perPage How many results to return per page (default 100) - pages are concatentated to produce the results array
-   * @returns An array of issues that match the query with a score as to how well they matched
+   * @param perPage   How many results to return per page (default 100) - pages are concatentated to produce the results array
+   * @returns         An array of issues that match the query with a score as to how well they matched
    */
   public async searchIssuesWithScoreAsync(
     query: string,
