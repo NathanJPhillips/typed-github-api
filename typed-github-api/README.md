@@ -1,8 +1,6 @@
 # Typed GitHub API
 This is another client for GitHub API, this one written in Typescript. It includes support for WebHooks using Express.
 
-**This API client is not yet finished, only install it if you're planning on extending it.**
-
 ## Example usage
 
 This is how to set up a Web hook to receive notifications for issues being changed.
