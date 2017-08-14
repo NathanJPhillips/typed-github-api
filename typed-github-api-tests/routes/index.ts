@@ -36,7 +36,7 @@ router.get("/organizations", async (_req: express.Request, res: express.Response
 
 router.get("/repos/:owner/:repo", async (req: express.Request, res: express.Response) => {
   try {
-    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo).loadAsync();
+    const repo = await gitHub.getOwner(req.params.owner).getRepository(req.params.repo).loadAsync();
     if (repo === null)
       throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
     res.render("repo", { title: `${repo.fullName} - Repositories`, repo: repo });
@@ -51,7 +51,7 @@ router.get("/repos/:owner/:repo", async (req: express.Request, res: express.Resp
 
 router.get("/repos/:owner/:repo/branches", async (req: express.Request, res: express.Response) => {
   try {
-    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo).loadAsync();
+    const repo = await gitHub.getOwner(req.params.owner).getRepository(req.params.repo).loadAsync();
     if (repo === null)
       throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
     const branches = await repo.loadBranchesAsync();
@@ -67,7 +67,7 @@ router.get("/repos/:owner/:repo/branches", async (req: express.Request, res: exp
 
 router.get("/repos/:owner/:repo/branches/:name", async (req: express.Request, res: express.Response) => {
   try {
-    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo).loadAsync();
+    const repo = await gitHub.getOwner(req.params.owner).getRepository(req.params.repo).loadAsync();
     if (repo === null)
       throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
     const branch = await repo.getBranch(req.params.name).loadAsync();
@@ -85,7 +85,7 @@ router.get("/repos/:owner/:repo/branches/:name", async (req: express.Request, re
 
 router.get("/repos/:owner/:repo/commits", async (req: express.Request, res: express.Response) => {
   try {
-    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo).loadAsync();
+    const repo = await gitHub.getOwner(req.params.owner).getRepository(req.params.repo).loadAsync();
     if (repo === null)
       throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
     const commits = await repo.loadCommitsAsync();
@@ -101,7 +101,7 @@ router.get("/repos/:owner/:repo/commits", async (req: express.Request, res: expr
 
 router.get("/repos/:owner/:repo/commits/:sha", async (req: express.Request, res: express.Response) => {
   try {
-    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo).loadAsync();
+    const repo = await gitHub.getOwner(req.params.owner).getRepository(req.params.repo).loadAsync();
     if (repo === null)
       throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
     const commit = await repo.getCommit(req.params.sha).loadAsync();
@@ -119,7 +119,7 @@ router.get("/repos/:owner/:repo/commits/:sha", async (req: express.Request, res:
 
 router.get("/repos/:owner/:repo/issues", async (req: express.Request, res: express.Response) => {
   try {
-    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo).loadAsync();
+    const repo = await gitHub.getOwner(req.params.owner).getRepository(req.params.repo).loadAsync();
     if (repo === null)
       throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
     const issues = await repo.loadIssuesAsync("none", "all");
@@ -135,7 +135,7 @@ router.get("/repos/:owner/:repo/issues", async (req: express.Request, res: expre
 
 router.get("/repos/:owner/:repo/issues/:number", async (req: express.Request, res: express.Response) => {
   try {
-    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo).loadAsync();
+    const repo = await gitHub.getOwner(req.params.owner).getRepository(req.params.repo).loadAsync();
     if (repo === null)
       throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
     const issue = await repo.getIssue(req.params.number).loadAsync();
@@ -153,7 +153,7 @@ router.get("/repos/:owner/:repo/issues/:number", async (req: express.Request, re
 
 router.get("/repos/:owner/:repo/pull-requests", async (req: express.Request, res: express.Response) => {
   try {
-    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo);
+    const repo = await gitHub.getOwner(req.params.owner).getRepository(req.params.repo);
     const pullRequests = await repo.loadPullRequestsAsync("all");
     const repository = pullRequests.length !== 0 ? pullRequests[0].base.repository : await repo.loadAsync();
     if (repository === null)
@@ -170,7 +170,7 @@ router.get("/repos/:owner/:repo/pull-requests", async (req: express.Request, res
 
 router.get("/repos/:owner/:repo/pull-requests/:number", async (req: express.Request, res: express.Response) => {
   try {
-    const repo = await gitHub.getUser(req.params.owner).getRepository(req.params.repo);
+    const repo = await gitHub.getOwner(req.params.owner).getRepository(req.params.repo);
     const pullRequest = await repo.getPullRequest(req.params.number).loadAsync();
     if (pullRequest === null)
       throw { status: HttpStatusCodes.NotFound, message: "Pull Request not found" };

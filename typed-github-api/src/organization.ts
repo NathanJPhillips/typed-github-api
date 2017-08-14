@@ -2,11 +2,11 @@ import * as moment from "moment";
 
 import * as apiTypes from "./api-interfaces";
 import { OptionsOrRef } from "./github-ref";
-import { OrganizationRefClass } from "./organization-ref";
+import { OwnerRefClass } from "./owner-ref";
 
 import { MyOrganization, Organization, OrganizationSummary } from "./interfaces/organization";
 
-export class OrganizationSummaryClass extends OrganizationRefClass implements OrganizationSummary {
+export class OrganizationSummaryClass extends OwnerRefClass implements OrganizationSummary {
   public id: number;
   public avatarUri: string;
   public description: string;

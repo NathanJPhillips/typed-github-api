@@ -3,12 +3,12 @@ import * as moment from "moment";
 import { BranchRef } from "./branch";
 import { CommitRef, CommitSummary } from "./commit";
 import { Issue, IssueRef } from "./issue";
-import { OrganizationRef } from "./organization";
+import { OwnerRef } from "./owner-ref";
 import { PullRequest, PullRequestRef } from "./pull-request";
-import { UserRef, UserSummary } from "./user";
+import { UserSummary } from "./user";
 
 export interface RepositoryRef {
-  readonly owner: UserRef | OrganizationRef;
+  readonly owner: OwnerRef;
   readonly name: string;
 
   getBranch(name: string): BranchRef;

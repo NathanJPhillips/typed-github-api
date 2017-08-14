@@ -4,14 +4,12 @@ import * as apiTypes from "./api-interfaces";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
 import { IssueClass } from "./issue";
 import { OrganizationSummaryClass } from "./organization";
-import { OrganizationRefClass } from "./organization-ref";
+import { OwnerRefClass } from "./owner-ref";
 import { RepositoryClass } from "./repository";
-import { UserRefClass } from "./user-ref";
 
 import { Issue } from "./interfaces/issue";
-import { OrganizationRef } from "./interfaces/organization";
+import { OwnerRef } from "./interfaces/owner-ref";
 import { Repository } from "./interfaces/repository";
-import { UserRef } from "./interfaces/user";
 
 
 export interface SearchResult<T> {
@@ -24,12 +22,22 @@ export class GitHubApi extends GitHubRef {
     super(options);
   }
 
-  public getUser(login: string): UserRef {
-    return new UserRefClass(login, this);
+  public getOwner(login: string): OwnerRef {
+    return new OwnerRefClass(login, this);
   }
 
-  public getOrganization(login: string): OrganizationRef {
-    return new OrganizationRefClass(login, this);
+  /**
+   * @deprecated Use getOwner instead
+   */
+  public getUser(login: string): OwnerRefClass {
+    return new OwnerRefClass(login, this);
+  }
+
+  /**
+   * @deprecated Use getOwner instead
+   */
+  public getOrganization(login: string): OwnerRefClass {
+    return new OwnerRefClass(login, this);
   }
 
   public async loadMyRepositoriesAsync(

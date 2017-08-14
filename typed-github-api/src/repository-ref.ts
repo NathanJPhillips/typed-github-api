@@ -4,24 +4,22 @@ import { BranchRefClass } from "./branch-ref";
 import { CommitRefClass } from "./commit-ref";
 import { GitHubRef } from "./github-ref";
 import { IssueRefClass } from "./issue-ref";
-import { OrganizationRefClass } from "./organization-ref";
+import { OwnerRefClass } from "./owner-ref";
 import { PullRequestRefClass } from "./pull-request-ref";
-import { UserRefClass } from "./user-ref";
 
 import { BranchRef } from "./interfaces/branch";
 import { CommitRef, CommitSummary } from "./interfaces/commit";
 import { Issue, IssueRef } from "./interfaces/issue";
-import { OrganizationRef } from "./interfaces/organization";
+import { OwnerRef } from "./interfaces/owner-ref";
 import { PullRequest, PullRequestRef } from "./interfaces/pull-request";
 import { Repository, RepositoryRef } from "./interfaces/repository";
-import { UserRef } from "./interfaces/user";
 
 
 export class RepositoryRefClass extends GitHubRef implements RepositoryRef {
-  public readonly owner: UserRef | OrganizationRef;
+  public readonly owner: OwnerRef;
   public readonly name: string;
 
-  public constructor(owner: UserRefClass | OrganizationRefClass, name: string) {
+  public constructor(owner: OwnerRefClass, name: string) {
     super(owner);
     this.owner = owner;
     this.name = name;

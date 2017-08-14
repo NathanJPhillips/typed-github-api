@@ -1,28 +1,8 @@
 import * as moment from "moment";
 
-import { Repository, RepositoryRef } from "./repository";
+import { OwnerRef } from "./owner-ref";
 
-export interface OrganizationRef {
-  login: string;
-
-  getRepository(name: string): RepositoryRef;
-
-  loadAsync(): Promise<Organization | null>;
-
-  /**
-   * Loads repositories owned by this organisation.
-   * @param type      The type of repository to return (default all)
-   * @param sort      The field to sort by (default full_name)
-   * @param ascending Whether to sort ascending rather than descending (default false unless sorting by full_name)
-   * @returns         The resulting array of repositories
-   */
-  loadRepositoriesAsync(
-    type?: "all" | "public" | "private" | "forks" | "sources" | "member",
-    sort?: "created" | "updated" | "pushed" | "full_name",
-    ascending?: boolean): Promise<Repository[]>;
-}
-
-export interface OrganizationSummary extends OrganizationRef {
+export interface OrganizationSummary extends OwnerRef {
   id: number;
   avatarUri: string;
   description: string;

@@ -2,12 +2,12 @@ import * as moment from "moment";
 
 import * as apiTypes from "./api-interfaces";
 import { OptionsOrRef } from "./github-ref";
-import { UserRefClass } from "./user-ref";
+import { OwnerRefClass } from "./owner-ref";
 
 import { MyUser, User, UserSummary } from "./interfaces/user";
 
 
-export class UserSummaryClass extends UserRefClass implements UserSummary {
+export class UserSummaryClass extends OwnerRefClass implements UserSummary {
   public id: number;
   public avatarUri: string;
   public siteAdministrator: boolean;
