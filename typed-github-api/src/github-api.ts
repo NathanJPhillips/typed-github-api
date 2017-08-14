@@ -40,7 +40,7 @@ export class GitHubApi extends GitHubRef {
   {
     if (ascending === undefined)
       ascending = sort === "full_name";
-    const response = await this.getAllPagesAsync(
+    const response = await this.getAllPagesAsync<apiTypes.Repository>(
       `/user/repos?visibility=${visibility}&affiliation=${affiliation.join(",")}&sort=${sort}&direction=${ascending ? "asc" : "desc"}`);
     if (response === null)
       throw new Error("Couldn't retrieve the current user's repositories");
@@ -67,7 +67,7 @@ export class GitHubApi extends GitHubRef {
     uri += `&sort=${sort}&direction=${ascending ? "asc" : "desc"}`;
     if (updatedSince)
       uri += `&since=${updatedSince.toISOString()}`;
-    const response = await this.getAllPagesAsync(uri);
+    const response = await this.getAllPagesAsync<apiTypes.Issue>(uri);
     if (response === null)
       throw new Error("Couldn't retrieve the current user's issues");
     return response.map(this.getIssue);
