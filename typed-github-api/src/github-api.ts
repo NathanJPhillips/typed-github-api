@@ -3,6 +3,7 @@ import * as moment from "moment";
 import * as apiTypes from "./api-interfaces";
 import { GitHubRef, OptionsOrRef } from "./github-ref";
 import { IssueClass } from "./issue";
+import { OrganizationSummaryClass } from "./organization";
 import { OrganizationRefClass } from "./organization-ref";
 import { RepositoryClass } from "./repository";
 import { UserRefClass } from "./user-ref";
@@ -44,6 +45,13 @@ export class GitHubApi extends GitHubRef {
     if (response === null)
       throw new Error("Couldn't retrieve the current user's repositories");
     return response.map(this.getRepository);
+  }
+
+  public async loadMyOrganizationsAsync() {
+    const response = await this.getAllPagesAsync<apiTypes.OrganizationSummary>("/user/orgs");
+    if (response === null)
+      throw new Error("Couldn't retrieve the current user's organizations");
+    return response.map((org) => new OrganizationSummaryClass(org, this));
   }
 
   public async loadIssuesAsync(

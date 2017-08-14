@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1= title
+  p These are your organizations:
+  ul(class="item-list")
+    each organization in organizations
+      li
+        img(src=organization.avatarUri class="avatar")
+        span
+            a(href=`/organizations/${organization.login}`)= organization.login
+        div(class="description")= organization.description

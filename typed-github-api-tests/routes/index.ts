@@ -1,4 +1,4 @@
-﻿import { Codes as HttpStatusCodes } from "blow-http-statuses";
+import { Codes as HttpStatusCodes } from "blow-http-statuses";
 import express = require("express");
 const router = express.Router();
 
@@ -12,6 +12,19 @@ router.get("/repos", async (_req: express.Request, res: express.Response) => {
   try {
     const repos = await gitHub.loadMyRepositoriesAsync("all");
     res.render("repos", { title: "Repositories", repos: repos });
+  } catch (err) {
+    res.status(err.status || HttpStatusCodes.InternalServerError);
+    res.render("error", {
+      message: err.message,
+      error: err,
+    });
+  }
+});
+
+router.get("/organizations", async (_req: express.Request, res: express.Response) => {
+  try {
+    const organizations = await gitHub.loadMyOrganizationsAsync();
+    res.render("organizations", { title: "Organizations", organizations: organizations });
   } catch (err) {
     res.status(err.status || HttpStatusCodes.InternalServerError);
     res.render("error", {
