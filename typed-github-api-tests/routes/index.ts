@@ -1,5 +1,6 @@
 import { Codes as HttpStatusCodes } from "blow-http-statuses";
 import express = require("express");
+import * as moment from "moment";
 const router = express.Router();
 
 import { gitHub } from "../github";
@@ -88,7 +89,7 @@ router.get("/repos/:owner/:repo/commits", async (req: express.Request, res: expr
     const repo = await gitHub.getOwner(req.params.owner).getRepository(req.params.repo).loadAsync();
     if (repo === null)
       throw { status: HttpStatusCodes.NotFound, message: "Repository not found" };
-    const commits = await repo.loadCommitsAsync();
+    const commits = await repo.loadCommitsAsync("master", undefined, undefined, moment().subtract(2, "weeks"));
     res.render("commits", { title: `Commits - ${repo.fullName} - Repositories`, repo: repo, commits: commits });
   } catch (err) {
     res.status(err.status || HttpStatusCodes.InternalServerError);
