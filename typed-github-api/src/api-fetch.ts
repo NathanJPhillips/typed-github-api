@@ -20,7 +20,7 @@ const nextLinkRegExp = /<([^>]+)>; rel="next"/;
 
 export async function getAsync<T>(uri: string, options: Options): Promise<Response<T> | null> {
   uri = getUri(uri);
-  logger.verbose(`Getting GitHub URI: ${uri}`);
+  logger.debug(`Getting GitHub URI: ${uri}`);
   const response = await fetch(uri, getRequestInfo("GET", options));
   // Check whether reached rate limit
   if (response.headers.has("X-RateLimit-Remaining") && parseInt(response.headers.get("X-RateLimit-Remaining"), 10) <= 0) {
@@ -39,7 +39,7 @@ export async function getAsync<T>(uri: string, options: Options): Promise<Respon
       throw new Error("You need to provide login credentials to view the requested resource");
   }
   if (Math.floor(response.status / 100) !== Math.floor(HttpStatusCodes.OK / 100))
-    throw new Error("Unexpected status code from GitHub: " + response.statusText);
+    throw new Error(`Unexpected status code from GitHub (${response.statusText}) while retrieving ${uri}`);
   // Create result
   const result: Response<T> = { data: await response.json() };
   // Get paging information
