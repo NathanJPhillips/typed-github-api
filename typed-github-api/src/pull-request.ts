@@ -122,7 +122,7 @@ export class PullRequestClass extends GitHubRef implements PullRequest {
       + `/pulls/${this.number}/requested_reviewers`);
     if (response === null)
       throw new Error("Could not load review comments for already loaded pull request");
-    return response.data.map((user) => new UserSummaryClass(user, this));
+    return response.data.users.map((user) => new UserSummaryClass(user, this));
   }
 }
 
