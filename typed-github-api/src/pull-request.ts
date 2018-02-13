@@ -104,7 +104,7 @@ export class PullRequestClass extends GitHubRef implements PullRequest {
     return response.data.map((comment) => new ReviewCommentClass(comment, this));
   }
 
-  public async loadReviewRequestsIncludingTeamsPreviewAsync(): Promise<ReviewRequests> {
+  public async loadReviewRequestsAsync(): Promise<ReviewRequests> {
     const response = await this.getPreviewAsync<apiTypes.ReviewRequests>(
       `/repos/${encodeURIComponent(this.base.repository.owner.login)}/${encodeURIComponent(this.base.repository.name)}`
       + `/pulls/${this.number}/requested_reviewers`);
@@ -114,15 +114,6 @@ export class PullRequestClass extends GitHubRef implements PullRequest {
       users: response.data.users.map((user) => new UserSummaryClass(user, this)),
       teams: response.data.teams.map((team) => new TeamClass(team, this)),
     };
-  }
-
-  public async loadReviewRequestsAsync(): Promise<UserSummary[]> {
-    const response = await this.getAsync<apiTypes.UserSummary[]>(
-      `/repos/${encodeURIComponent(this.base.repository.owner.login)}/${encodeURIComponent(this.base.repository.name)}`
-      + `/pulls/${this.number}/requested_reviewers`);
-    if (response === null)
-      throw new Error("Could not load review comments for already loaded pull request");
-    return response.data.users.map((user) => new UserSummaryClass(user, this));
   }
 }
 

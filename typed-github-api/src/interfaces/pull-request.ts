@@ -33,8 +33,7 @@ export interface PullRequest extends PullRequestRef {
   loadIssueAsync(): Promise<Issue>;
   loadReviewsAsync(): Promise<Review[]>;
   loadReviewCommentsAsync(): Promise<ReviewComment[]>;
-  loadReviewRequestsIncludingTeamsPreviewAsync(): Promise<ReviewRequests>;
-  loadReviewRequestsAsync(): Promise<UserSummary[]>;
+  loadReviewRequestsAsync(): Promise<ReviewRequests>;
 }
 
 export interface Review {

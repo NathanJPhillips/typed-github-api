@@ -183,7 +183,6 @@ router.get("/repos/:owner/:repo/pull-requests/:number", async (req: express.Requ
         pullRequest: pullRequest,
         reviews: await pullRequest.loadReviewsAsync(),
         reviewRequests: await pullRequest.loadReviewRequestsAsync(),
-        reviewRequestsWithTeams: await pullRequest.loadReviewRequestsIncludingTeamsPreviewAsync(),
       });
   } catch (err) {
     res.status(err.status || HttpStatusCodes.InternalServerError);

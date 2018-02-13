@@ -13,17 +13,13 @@ block content
   dd
     each assignee in pullRequest.assignees
       div #[span= assignee.login] #[img(src=assignee.avatarUri class="avatar")]
-  dt Review Requests
-  dd
-    each review in reviewRequests
-      div #[span= review.login] #[img(src=review.avatarUri class="avatar")]
   dt Review Requests - Users
   dd
-    each review in reviewRequestsWithTeams.users
+    each review in reviewRequests.users
       div #[span= review.login] #[img(src=review.avatarUri class="avatar")]
   dt Review Requests - Teams
   dd
-    each review in reviewRequestsWithTeams.teams
+    each review in reviewRequests.teams
       div #[span= review.name] #[span= review.description]
   dt Reviews
   dd
